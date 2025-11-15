@@ -1,20 +1,24 @@
 #include "Game.h"
+
 #include <SFML/Window/Event.hpp>
+#include <Util/Stopwatch.h>
 
 namespace application {
 
-Game::Game() : window_(sf::VideoMode(1600, 1200), "Pac-Man") {}
+Game::Game() : _window(sf::VideoMode(1600, 1200), "Pac-Man") {}
 void Game::run() {
-    while (window_.isOpen()) {
+    while (_window.isOpen()) {
+        double deltaTime = logic::Stopwatch::getInstance()->getDeltaTime();
+
         sf::Event event{};
-        while (window_.pollEvent(event)) {
+        while (_window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
-                window_.close();
+                _window.close();
         }
 
-        window_.clear(sf::Color::Black);
+        _window.clear(sf::Color::Black);
 
-        window_.display();
+        _window.display();
     }
 }
 

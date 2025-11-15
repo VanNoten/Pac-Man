@@ -11,7 +11,7 @@ public:
     void run();
 
 private:
-    sf::RenderWindow window_;
+    sf::RenderWindow _window;
 };
 
 } // namespace application
