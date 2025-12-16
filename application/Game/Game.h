@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <States/StateManager.h>
 
 namespace application {
 
@@ -12,6 +13,7 @@ public:
 
 private:
     sf::RenderWindow _window;
+    StateManager _stateManager;
 };
 
 } // namespace application
