@@ -9,11 +9,14 @@
 
 namespace logic {
 
+enum class Actions { UpArrow, DownArrow, LeftArrow, RightArrow };
+
 class World {
 public:
     World() = default;
     ~World() = default;
 
+    void handleAction(Actions action) const;
     void update(float deltaTime);
     void loadMap(const std::vector<std::string>& map);
     [[nodiscard]] const std::vector<std::unique_ptr<Wall>>& getWalls() const;

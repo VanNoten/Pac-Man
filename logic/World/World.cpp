@@ -2,6 +2,25 @@
 
 namespace logic {
 
+void World::handleAction(Actions action) const {
+    switch (action) {
+    case Actions::UpArrow:
+        _pacman->setDirection(Direction::UP);
+        break;
+    case Actions::DownArrow:
+        _pacman->setDirection(Direction::DOWN);
+        break;
+    case Actions::LeftArrow:
+        _pacman->setDirection(Direction::LEFT);
+        break;
+    case Actions::RightArrow:
+        _pacman->setDirection(Direction::RIGHT);
+        break;
+    default:
+        break;
+    }
+}
+
 void World::update(const float deltaTime) { _pacman->update(deltaTime); }
 
 void World::loadMap(const std::vector<std::string>& map) {

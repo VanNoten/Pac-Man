@@ -3,7 +3,9 @@
 #include "PausedState.h"
 
 #include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <Util/Stopwatch.h>
@@ -19,14 +21,21 @@ void PlayingState::handleEvent(const sf::Event& event) {
             _stateManager.pushState(std::make_unique<PausedState>(_stateManager));
         }
 
-        if (event.key.code == sf::Keyboard::Up) {
-            _world->getPacman().setDirection(logic::Direction::UP);
-        } else if (event.key.code == sf::Keyboard::Down) {
-            _world->getPacman().setDirection(logic::Direction::DOWN);
-        } else if (event.key.code == sf::Keyboard::Left) {
-            _world->getPacman().setDirection(logic::Direction::LEFT);
-        } else if (event.key.code == sf::Keyboard::Right) {
-            _world->getPacman().setDirection(logic::Direction::RIGHT);
+        switch (event.key.code) {
+        case sf::Keyboard::Up:
+            _world->handleAction(logic::Actions::UpArrow);
+            break;
+        case sf::Keyboard::Down:
+            _world->handleAction(logic::Actions::DownArrow);
+            break;
+        case sf::Keyboard::Left:
+            _world->handleAction(logic::Actions::LeftArrow);
+            break;
+        case sf::Keyboard::Right:
+            _world->handleAction(logic::Actions::RightArrow);
+            break;
+        default:
+            break;
         }
     }
 }
@@ -73,6 +82,16 @@ void PlayingState::render(sf::RenderWindow& window) {
     circle.setPosition(screenX - radius, screenY - radius);
     circle.setFillColor(sf::Color::Yellow);
     window.draw(circle);
+
+    std::string posString =
+        std::to_string(_world->getPacman().getX()) + ", " + std::to_string(_world->getPacman().getY());
+    sf::Font arial;
+    arial.loadFromFile("C:\\Windows\\Fonts\\Arial.ttf");
+    sf::Text pos;
+    pos.setFont(arial);
+    pos.setFillColor(sf::Color::Green);
+    pos.setString(posString);
+    window.draw(pos);
 }
 
 } // namespace application

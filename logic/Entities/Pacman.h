@@ -19,7 +19,7 @@ public:
 private:
     Direction _direction = Direction::RIGHT;
     float _size = 0.08f;
-    float _speed = 0.5f;
+    float _speed = 0.3f;
 };
 
 } // namespace logic
