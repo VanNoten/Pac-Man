@@ -14,7 +14,7 @@ double Stopwatch::getDeltaTime() {
     const std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
     const double deltaTime = std::chrono::duration<double>(currentTime - _lastTime).count();
     _lastTime = currentTime;
-    return deltaTime;
+    return std::min(deltaTime, 0.01);
 }
 
 Stopwatch::Stopwatch() { _lastTime = std::chrono::steady_clock::now(); }

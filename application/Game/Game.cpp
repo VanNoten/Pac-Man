@@ -11,8 +11,6 @@ Game::Game() : _window(sf::VideoMode(1024, 768), "Pac-Man") {
 }
 void Game::run() {
     while (_window.isOpen()) {
-        double deltaTime = logic::Stopwatch::getInstance()->getDeltaTime();
-
         sf::Event event{};
         while (_window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
