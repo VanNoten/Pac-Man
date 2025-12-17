@@ -2,6 +2,8 @@
 
 namespace logic {
 
+void World::update(const float deltaTime) { _pacman->update(deltaTime); }
+
 void World::loadMap(const std::vector<std::string>& map) {
     _walls.clear();
     if (map.empty())
@@ -9,20 +11,40 @@ void World::loadMap(const std::vector<std::string>& map) {
 
     const int rows = map.size();
     const int cols = map[0].size();
-    const float cellWidth = 2.0f / cols;
-    const float cellHeight = 2.0f / rows;
 
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            if (map[i][j] != '#')
-                continue;
+    const float cell = 2.0f / std::max(cols, rows);
 
-            float x = -1.0f + cellWidth * (j + 0.5f);
-            float y = 1.0f - cellHeight * (i + 0.5f);
-            _walls.push_back(std::make_unique<Wall>(x, y, cellWidth, cellHeight));
+    const float totalWidth = cell * cols;
+    const float totalHeight = cell * rows;
+
+    const float originX = -totalWidth * 0.5f;
+    const float originY = totalHeight * 0.5f;
+
+    if (_pacman) {
+        _pacman->setSize(cell * 0.9f);
+    }
+
+    for (int r = 0; r < rows; ++r) {
+        for (int c = 0; c < cols; ++c) {
+            const float x = originX + cell * (c + 0.5f);
+            const float y = originY - cell * (r + 0.5f);
+
+            switch (map[r][c]) {
+            case '#':
+                _walls.push_back(std::make_unique<Wall>(x, y, cell, cell));
+                break;
+            case '@':
+                _pacman = std::make_unique<Pacman>(x, y);
+                break;
+            default:
+                break;
+            }
         }
     }
 }
+
 const std::vector<std::unique_ptr<Wall>>& World::getWalls() const { return _walls; }
+
+Pacman& World::getPacman() const { return *_pacman; }
 
 } // namespace logic

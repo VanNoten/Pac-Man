@@ -1,8 +1,6 @@
 #include "Game.h"
 
 #include "States/MenuState.h"
-#include "States/PlayingState.h"
-
 #include <SFML/Window/Event.hpp>
 #include <Util/Stopwatch.h>
 
