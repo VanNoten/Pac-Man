@@ -23,6 +23,9 @@ public:
     [[nodiscard]] Pacman& getPacman() const;
 
 private:
+    [[nodiscard]] bool isColliding(const Bounds& A, const Bounds& B) const;
+    [[nodiscard]] bool willCollideWithWalls(const Bounds& A) const;
+
     std::vector<std::unique_ptr<Wall>> _walls;
     std::unique_ptr<Pacman> _pacman;
 };

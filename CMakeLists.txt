@@ -11,6 +11,7 @@ file(GLOB_RECURSE LOGIC_SOURCES
 
 add_library(pacman_logic STATIC
         ${LOGIC_SOURCES}
+        logic/Util/Structs.h
 )
 
 target_include_directories(pacman_logic

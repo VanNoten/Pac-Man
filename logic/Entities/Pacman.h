@@ -1,24 +1,23 @@
 #ifndef PACMAN_H
 #define PACMAN_H
 #include "EntityModel.h"
+#include "Util/Structs.h"
 
 namespace logic {
 
-enum class Direction { UP, DOWN, LEFT, RIGHT };
-
 class Pacman : public EntityModel {
 public:
-    Pacman(float x, float y);
+    Pacman(float x, float y, float width, float height);
     void update(float deltaTime) override;
-    [[nodiscard]] float getWidth() const override;
-    [[nodiscard]] float getHeight() const override;
+    [[nodiscard]] Bounds getNextBounds(float deltaTime) const;
     void setDirection(Direction direction);
     [[nodiscard]] Direction getDirection() const;
-    void setSize(float size);
+    void setWantedDirection(Direction direction);
+    [[nodiscard]] Direction getWantedDirection() const;
 
 private:
     Direction _direction = Direction::RIGHT;
-    float _size = 0.08f;
+    Direction _wantedDirection = Direction::RIGHT;
     float _speed = 0.3f;
 };
 
