@@ -2,9 +2,11 @@
 #define ENTITYMODEL_H
 #include "Util/Structs.h"
 
+#include <Observer/Subject.h>
+
 namespace logic {
 
-class EntityModel {
+class EntityModel : public Subject {
 public:
     virtual ~EntityModel() = default;
     virtual void update(float deltaTime) = 0;

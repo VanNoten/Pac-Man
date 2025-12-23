@@ -1,19 +1,23 @@
 #include "World.h"
 
+#include <utility>
+
 namespace logic {
+
+World::World(AbstractFactory& factory) : _factory(factory) {}
 
 void World::handleAction(Actions action) const {
     switch (action) {
-    case Actions::UpArrow:
+    case Actions::Up:
         _pacman->setWantedDirection(Direction::UP);
         break;
-    case Actions::DownArrow:
+    case Actions::Down:
         _pacman->setWantedDirection(Direction::DOWN);
         break;
-    case Actions::LeftArrow:
+    case Actions::Left:
         _pacman->setWantedDirection(Direction::LEFT);
         break;
-    case Actions::RightArrow:
+    case Actions::Right:
         _pacman->setWantedDirection(Direction::RIGHT);
         break;
     default:
@@ -32,6 +36,12 @@ void World::update(const float deltaTime) {
 
     if (!willCollideWithWalls(_pacman->getNextBounds(deltaTime))) {
         _pacman->update(deltaTime);
+    }
+
+    for (const auto& coin : _coins) {
+        if (!coin->isCollected() && isColliding(_pacman->getBounds(), coin->getBounds())) {
+            coin->collect();
+        }
     }
 }
 
@@ -58,11 +68,13 @@ void World::loadMap(const std::vector<std::string>& map) {
 
             switch (map[r][c]) {
             case '#':
-                _walls.push_back(std::make_unique<Wall>(x, y, cell, cell));
+                _walls.push_back(_factory.createWall(x, y, cell, cell));
                 break;
             case '@':
-                _pacman = std::make_unique<Pacman>(x, y, cell * 0.9f, cell * 0.9f);
+                _pacman = _factory.createPacman(x, y, cell * 0.9f, cell * 0.9f);
                 break;
+            case '.':
+                _coins.push_back(_factory.createCoin(x, y, cell * 0.2f, cell * 0.2f));
             default:
                 break;
             }
@@ -71,6 +83,8 @@ void World::loadMap(const std::vector<std::string>& map) {
 }
 
 const std::vector<std::unique_ptr<Wall>>& World::getWalls() const { return _walls; }
+
+const std::vector<std::unique_ptr<Coin>>& World::getCoins() const { return _coins; }
 
 Pacman& World::getPacman() const { return *_pacman; }
 

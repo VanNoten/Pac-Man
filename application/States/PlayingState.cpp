@@ -13,7 +13,10 @@
 namespace application {
 
 PlayingState::PlayingState(StateManager& stateManager)
-    : _stateManager(stateManager), _world(std::make_unique<logic::World>()){};
+    : _stateManager(stateManager), _score(std::make_shared<logic::Score>()) {
+    _sfmlFactory.setScoreObserver(_score);
+    _world = std::make_unique<logic::World>(_sfmlFactory);
+};
 
 void PlayingState::handleEvent(const sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
@@ -23,16 +26,16 @@ void PlayingState::handleEvent(const sf::Event& event) {
 
         switch (event.key.code) {
         case sf::Keyboard::Up:
-            _world->handleAction(logic::Actions::UpArrow);
+            _world->handleAction(logic::Actions::Up);
             break;
         case sf::Keyboard::Down:
-            _world->handleAction(logic::Actions::DownArrow);
+            _world->handleAction(logic::Actions::Down);
             break;
         case sf::Keyboard::Left:
-            _world->handleAction(logic::Actions::LeftArrow);
+            _world->handleAction(logic::Actions::Left);
             break;
         case sf::Keyboard::Right:
-            _world->handleAction(logic::Actions::RightArrow);
+            _world->handleAction(logic::Actions::Right);
             break;
         default:
             break;
@@ -51,7 +54,9 @@ void PlayingState::update() {
     }
 
     float deltaTime = static_cast<float>(logic::Stopwatch::getInstance()->getDeltaTime());
+
     _world->update(deltaTime);
+    _score->updateTick(deltaTime);
 }
 
 void PlayingState::render(sf::RenderWindow& window) {
@@ -70,6 +75,21 @@ void PlayingState::render(sf::RenderWindow& window) {
         rect.setPosition(screenX - width * 0.5f, screenY - height * 0.5f);
         rect.setFillColor(sf::Color(0, 0, 255));
         window.draw(rect);
+    }
+
+    for (const auto& coin : _world->getCoins()) {
+        if (coin->isCollected())
+            continue;
+
+        float screenX;
+        float screenY;
+        _camera->worldToScreen(coin->getX(), coin->getY(), screenX, screenY);
+        float radius = _camera->worldToScreenSize(coin->getWidth() * 0.5f);
+
+        sf::CircleShape circle(radius);
+        circle.setPosition(screenX - radius, screenY - radius);
+        circle.setFillColor(sf::Color::White);
+        window.draw(circle);
     }
 
     const auto& pacman = _world->getPacman();
@@ -92,6 +112,14 @@ void PlayingState::render(sf::RenderWindow& window) {
     pos.setFillColor(sf::Color::Green);
     pos.setString(posString);
     window.draw(pos);
+
+    sf::Text scoreText;
+    scoreText.setFont(arial);
+    scoreText.setString("Score: " + std::to_string(_score->getCurrentScore()));
+    scoreText.setCharacterSize(24);
+    scoreText.setFillColor(sf::Color::White);
+    scoreText.setPosition(0, 30);
+    window.draw(scoreText);
 }
 
 } // namespace application

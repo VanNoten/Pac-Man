@@ -6,6 +6,9 @@
 #include "Util/Camera.h"
 #include "World/World.h"
 
+#include <SFMLFactory/SFMLFactory.h>
+#include <Score/Score.h>
+
 namespace application {
 
 class PlayingState : public State {
@@ -17,8 +20,10 @@ public:
 
 private:
     StateManager& _stateManager;
+    SFMLFactory _sfmlFactory;
     std::unique_ptr<logic::Camera> _camera;
     std::unique_ptr<logic::World> _world;
+    std::shared_ptr<logic::Score> _score;
     bool _mapLoaded = false;
 };
 
