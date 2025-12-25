@@ -26,9 +26,16 @@ public:
     [[nodiscard]] Pacman& getPacman() const;
 
 private:
-    [[nodiscard]] bool isColliding(const Bounds& A, const Bounds& B) const;
-    [[nodiscard]] bool willCollideWithWalls(const Bounds& A) const;
+    void handlePacmanMovement(float deltaTime) const;
+    [[nodiscard]] static bool isColliding(const Bounds& A, const Bounds& B);
+    [[nodiscard]] float getTileCenterX(int tileX) const;
+    [[nodiscard]] float getTileCenterY(int tileY) const;
+    [[nodiscard]] int getTileX(float x) const;
+    [[nodiscard]] int getTileY(float y) const;
+    [[nodiscard]] bool isWallAtTile(int tileX, int tileY) const;
 
+    std::vector<std::string> _map = {};
+    float _originX, _originY, _cell;
     AbstractFactory& _factory;
 
     std::vector<std::unique_ptr<Wall>> _walls;

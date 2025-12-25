@@ -9,9 +9,14 @@ class Pacman : public EntityModel {
 public:
     Pacman(float x, float y, float width, float height);
     void update(float deltaTime) override;
-    [[nodiscard]] Bounds getNextBounds(float deltaTime) const;
+
+    void move(float x, float y);
+    void setPosition(float x, float y);
+    [[nodiscard]] float getSpeed() const;
+
     void setDirection(Direction direction);
     [[nodiscard]] Direction getDirection() const;
+
     void setWantedDirection(Direction direction);
     [[nodiscard]] Direction getWantedDirection() const;
 
