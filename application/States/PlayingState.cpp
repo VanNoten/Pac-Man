@@ -46,7 +46,7 @@ void PlayingState::handleEvent(const sf::Event& event) {
 void PlayingState::update() {
     if (!_mapLoaded) {
         const std::vector<std::string> map = {"####################", "#....#........#....#", "#.##.#.######.#.##.#",
-                                              "#.#..............#.#", "#.#.##.##..##.##.#.#", "#......#....#......#",
+                                              "#.#..............#.#", "#.#.##.##..##.##.#.#", "#......#1234#......#",
                                               "#.#.##.######.##.#.#", "#.#..............#.#", "#.##.#.######.#.##.#",
                                               "#....#....@...#....#", "####################"};
         _world->loadMap(map);
@@ -89,6 +89,32 @@ void PlayingState::render(sf::RenderWindow& window) {
         sf::CircleShape circle(radius);
         circle.setPosition(screenX - radius, screenY - radius);
         circle.setFillColor(sf::Color::White);
+        window.draw(circle);
+    }
+
+    for (const auto& ghost : _world->getGhosts()) {
+        float screenX;
+        float screenY;
+        _camera->worldToScreen(ghost->getX(), ghost->getY(), screenX, screenY);
+        float radius = _camera->worldToScreenSize(ghost->getWidth() * 0.5f);
+
+        sf::CircleShape circle(radius);
+        circle.setPosition(screenX - radius, screenY - radius);
+
+        switch (ghost->getGhostType()) {
+        case logic::GhostType::Locked:
+            circle.setFillColor(sf::Color::Red);
+            break;
+        case logic::GhostType::AheadChaser:
+            circle.setFillColor(sf::Color::Magenta);
+            break;
+        case logic::GhostType::Chaser:
+            circle.setFillColor(sf::Color::Yellow);
+            break;
+        default:
+            break;
+        }
+
         window.draw(circle);
     }
 

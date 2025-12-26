@@ -1,6 +1,9 @@
 #include "World.h"
 
+#include <Util/Random.h>
+#include <algorithm>
 #include <cmath>
+#include <iostream>
 
 namespace logic {
 
@@ -27,6 +30,10 @@ void World::handleAction(Actions action) const {
 
 void World::update(const float deltaTime) {
     handlePacmanMovement(deltaTime);
+
+    for (auto& ghost : _ghosts) {
+        handleGhostMovement(*ghost, deltaTime);
+    }
 
     for (const auto& coin : _coins) {
         if (!coin->isCollected() && isColliding(_pacman->getBounds(), coin->getBounds())) {
@@ -67,6 +74,19 @@ void World::loadMap(const std::vector<std::string>& map) {
                 break;
             case '.':
                 _coins.push_back(_factory.createCoin(x, y, _cell * 0.2f, _cell * 0.2f));
+                break;
+            case '1':
+                _ghosts.push_back(_factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, GhostType::Locked));
+                break;
+            case '2':
+                _ghosts.push_back(_factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, GhostType::AheadChaser));
+                break;
+            case '3':
+                _ghosts.push_back(_factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, GhostType::AheadChaser));
+                break;
+            case '4':
+                _ghosts.push_back(_factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, GhostType::Chaser));
+                break;
             default:
                 break;
             }
@@ -77,6 +97,8 @@ void World::loadMap(const std::vector<std::string>& map) {
 const std::vector<std::unique_ptr<Wall>>& World::getWalls() const { return _walls; }
 
 const std::vector<std::unique_ptr<Coin>>& World::getCoins() const { return _coins; }
+
+const std::vector<std::unique_ptr<Ghost>>& World::getGhosts() const { return _ghosts; }
 
 Pacman& World::getPacman() const { return *_pacman; }
 
@@ -115,49 +137,18 @@ void World::handlePacmanMovement(const float deltaTime) const {
     float distanceToCenterTile = (x - centerX) * (x - centerX) + (y - centerY) * (y - centerY);
     if (distanceToCenterTile < moveDistance * moveDistance + 1e-4f) {
         if (wantedDirection != currentDirection) {
-            int nextTileX = tileX;
-            int nextTileY = tileY;
+            std::pair<int, int> nextTile = getTileInDirection(tileX, tileY, wantedDirection);
 
-            switch (wantedDirection) {
-            case Direction::UP:
-                nextTileY--;
-                break;
-            case Direction::DOWN:
-                nextTileY++;
-                break;
-            case Direction::LEFT:
-                nextTileX--;
-                break;
-            case Direction::RIGHT:
-                nextTileX++;
-                break;
-            }
-
-            if (!isWallAtTile(nextTileX, nextTileY)) {
+            if (!isWallAtTile(nextTile.first, nextTile.second)) {
                 _pacman->setPosition(centerX, centerY);
                 _pacman->setDirection(wantedDirection);
                 currentDirection = wantedDirection;
             }
         }
 
-        int tileInfrontX = tileX;
-        int tileInfrontY = tileY;
-        switch (currentDirection) {
-        case Direction::UP:
-            tileInfrontY--;
-            break;
-        case Direction::DOWN:
-            tileInfrontY++;
-            break;
-        case Direction::LEFT:
-            tileInfrontX--;
-            break;
-        case Direction::RIGHT:
-            tileInfrontX++;
-            break;
-        }
+        std::pair<int, int> tileInfront = getTileInDirection(tileX, tileY, currentDirection);
 
-        if (isWallAtTile(tileInfrontX, tileInfrontY)) {
+        if (isWallAtTile(tileInfront.first, tileInfront.second)) {
             _pacman->setPosition(centerX, centerY);
             return;
         }
@@ -183,6 +174,59 @@ void World::handlePacmanMovement(const float deltaTime) const {
     _pacman->move(moveX, moveY);
 }
 
+void World::handleGhostMovement(Ghost& ghost, const float deltaTime) const {
+    const float speed = ghost.getSpeed();
+    const float moveDistance = speed * deltaTime;
+
+    const float x = ghost.getX();
+    const float y = ghost.getY();
+    const int tileX = getTileX(x);
+    const int tileY = getTileY(y);
+    const float centerX = getTileCenterX(tileX);
+    const float centerY = getTileCenterY(tileY);
+
+    Direction currentDirection = ghost.getDirection();
+
+    bool isNewTile = tileX != ghost.getLastDecisionTileX() || tileY != ghost.getLastDecisionTileY();
+    float distanceToCenterTile = (x - centerX) * (x - centerX) + (y - centerY) * (y - centerY);
+    if (distanceToCenterTile < moveDistance * moveDistance + 1e-4f && isNewTile) {
+        ghost.setLastDecisionTile(tileX, tileY);
+
+        Direction nextDirection = getNextGhostDirection(ghost);
+        ghost.setDirection(nextDirection);
+        if (currentDirection != nextDirection) {
+            ghost.setPosition(centerX, centerY);
+            currentDirection = nextDirection;
+        }
+
+        std::pair<int, int> tileInfront = getTileInDirection(tileX, tileY, currentDirection);
+
+        if (isWallAtTile(tileInfront.first, tileInfront.second)) {
+            ghost.setPosition(centerX, centerY);
+            return;
+        }
+    }
+
+    float moveX = 0.0f;
+    float moveY = 0.0f;
+    switch (currentDirection) {
+    case Direction::UP:
+        moveY = moveDistance;
+        break;
+    case Direction::DOWN:
+        moveY = -moveDistance;
+        break;
+    case Direction::LEFT:
+        moveX = -moveDistance;
+        break;
+    case Direction::RIGHT:
+        moveX = moveDistance;
+        break;
+    }
+
+    ghost.move(moveX, moveY);
+}
+
 bool World::isColliding(const Bounds& A, const Bounds& B) {
     return (A.left < B.right && A.right > B.left) && (A.top < B.bottom && A.bottom > B.top);
 }
@@ -195,12 +239,192 @@ int World::getTileX(const float x) const { return static_cast<int>((x - _originX
 
 int World::getTileY(const float y) const { return static_cast<int>((_originY - y) / _cell); }
 
+std::pair<int, int> World::getTileInDirection(const int tileX, const int tileY, const Direction direction) {
+    int tileInDirectionX = tileX;
+    int tileInDirectionY = tileY;
+    switch (direction) {
+    case Direction::UP:
+        tileInDirectionY--;
+        break;
+    case Direction::DOWN:
+        tileInDirectionY++;
+        break;
+    case Direction::LEFT:
+        tileInDirectionX--;
+        break;
+    case Direction::RIGHT:
+        tileInDirectionX++;
+        break;
+    }
+
+    return {tileInDirectionX, tileInDirectionY};
+}
+
 bool World::isWallAtTile(const int tileX, const int tileY) const {
     if (tileY < 0 || tileY >= _map.size())
         return true;
     if (tileX < 0 || tileX >= _map[0].size())
         return true;
     return _map[tileY][tileX] == '#';
+}
+
+int World::getManhattanDistance(const int fromTileX, const int fromTileY, const int toTileX, const int toTileY) {
+    return abs(fromTileX - toTileX) + abs(fromTileY - toTileY);
+}
+
+std::vector<Direction> World::getPossibleDirections(const Ghost& ghost) const {
+    std::vector<Direction> possibleDirections = {};
+    const int tileX = getTileX(ghost.getX());
+    const int tileY = getTileY(ghost.getY());
+
+    const Direction ghostDirection = ghost.getDirection();
+    Direction reverseDirection;
+
+    switch (ghostDirection) {
+    case Direction::UP:
+        reverseDirection = Direction::DOWN;
+        break;
+    case Direction::DOWN:
+        reverseDirection = Direction::UP;
+        break;
+    case Direction::LEFT:
+        reverseDirection = Direction::RIGHT;
+        break;
+    case Direction::RIGHT:
+        reverseDirection = Direction::LEFT;
+        break;
+    default:
+        break;
+    }
+
+    if (!isWallAtTile(tileX, tileY - 1) && reverseDirection != Direction::UP)
+        possibleDirections.push_back(Direction::UP);
+
+    if (!isWallAtTile(tileX, tileY + 1) && reverseDirection != Direction::DOWN)
+        possibleDirections.push_back(Direction::DOWN);
+
+    if (!isWallAtTile(tileX - 1, tileY) && reverseDirection != Direction::LEFT)
+        possibleDirections.push_back(Direction::LEFT);
+
+    if (!isWallAtTile(tileX + 1, tileY) && reverseDirection != Direction::RIGHT)
+        possibleDirections.push_back(Direction::RIGHT);
+
+    if (possibleDirections.empty())
+        return {reverseDirection};
+
+    return possibleDirections;
+}
+
+Direction World::getNextGhostDirection(const Ghost& ghost) const {
+    GhostType ghostType = ghost.getGhostType();
+    std::vector<Direction> possibleDirections = getPossibleDirections(ghost);
+
+    if (possibleDirections.size() == 1)
+        return possibleDirections[0];
+
+    if (ghostType == GhostType::Locked) {
+        if (Random::getInstance()->chance(0.5)) {
+            std::vector<Direction> filteredDirections;
+            for (const auto direction : possibleDirections) {
+                if (direction != ghost.getDirection()) {
+                    filteredDirections.push_back(direction);
+                }
+            }
+
+            if (!filteredDirections.empty()) {
+                return filteredDirections[Random::getInstance()->randomIndex(filteredDirections.size())];
+            }
+        }
+
+        bool canKeepGoing = false;
+        for (const auto direction : possibleDirections) {
+            if (direction == ghost.getDirection()) {
+                canKeepGoing = true;
+                break;
+            }
+        }
+
+        if (canKeepGoing) {
+            return ghost.getDirection();
+        }
+        return possibleDirections[Random::getInstance()->randomIndex(possibleDirections.size())];
+    }
+
+    if (ghostType == GhostType::AheadChaser) {
+        std::vector<Direction> possibleDirections = getPossibleDirections(ghost);
+
+        if (possibleDirections.size() == 1)
+            return possibleDirections[0];
+
+        int minManhattanDistance = std::numeric_limits<int>::max();
+        std::vector<Direction> bestDirections;
+
+        const int pacTileX = getTileX(_pacman->getX());
+        const int pacTileY = getTileY(_pacman->getY());
+        std::pair<int, int> nextPacTile = getTileInDirection(pacTileX, pacTileY, _pacman->getDirection());
+
+        const int ghostTileX = getTileX(ghost.getX());
+        const int ghostTileY = getTileY(ghost.getY());
+
+        for (const auto& direction : possibleDirections) {
+            std::pair<int, int> nextGhostTile = getTileInDirection(ghostTileX, ghostTileY, direction);
+
+            int manhattanDistance =
+                getManhattanDistance(nextGhostTile.first, nextGhostTile.second, nextPacTile.first, nextPacTile.second);
+
+            if (manhattanDistance < minManhattanDistance) {
+                minManhattanDistance = manhattanDistance;
+                bestDirections.clear();
+                bestDirections.push_back(direction);
+            } else if (manhattanDistance == minManhattanDistance) {
+                bestDirections.push_back(direction);
+            }
+        }
+
+        if (!bestDirections.empty()) {
+            return bestDirections[Random::getInstance()->randomIndex(bestDirections.size())];
+        }
+
+        return ghost.getDirection();
+    }
+
+    if (ghostType == GhostType::Chaser) {
+        std::vector<Direction> possibleDirections = getPossibleDirections(ghost);
+
+        if (possibleDirections.size() == 1)
+            return possibleDirections[0];
+
+        int minManhattanDistance = std::numeric_limits<int>::max();
+        std::vector<Direction> bestDirections;
+
+        const int pacTileX = getTileX(_pacman->getX());
+        const int pacTileY = getTileY(_pacman->getY());
+
+        const int ghostTileX = getTileX(ghost.getX());
+        const int ghostTileY = getTileY(ghost.getY());
+
+        for (const auto& direction : possibleDirections) {
+            std::pair<int, int> nextGhostTile = getTileInDirection(ghostTileX, ghostTileY, direction);
+
+            int manhattanDistance = getManhattanDistance(nextGhostTile.first, nextGhostTile.second, pacTileX, pacTileY);
+
+            if (manhattanDistance < minManhattanDistance) {
+                minManhattanDistance = manhattanDistance;
+                bestDirections.clear();
+                bestDirections.push_back(direction);
+            } else if (manhattanDistance == minManhattanDistance) {
+                bestDirections.push_back(direction);
+            }
+        }
+
+        if (!bestDirections.empty()) {
+            return bestDirections[Random::getInstance()->randomIndex(bestDirections.size())];
+        }
+
+        return ghost.getDirection();
+    }
+
+    return ghost.getDirection();
 }
 
 } // namespace logic

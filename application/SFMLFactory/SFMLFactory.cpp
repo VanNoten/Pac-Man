@@ -21,4 +21,9 @@ std::unique_ptr<logic::Coin> SFMLFactory::createCoin(float x, float y, float wid
     return coin;
 }
 
+std::unique_ptr<logic::Ghost> SFMLFactory::createGhost(float x, float y, float width, float height,
+                                                       logic::GhostType ghostType) {
+    return std::make_unique<logic::Ghost>(x, y, width, height, ghostType);
+}
+
 } // namespace application

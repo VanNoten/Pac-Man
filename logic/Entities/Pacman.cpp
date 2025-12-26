@@ -23,7 +23,7 @@ void Pacman::setDirection(const Direction direction) { _direction = direction; }
 
 Direction Pacman::getDirection() const { return _direction; }
 
-void Pacman::setWantedDirection(Direction direction) { _wantedDirection = direction; }
+void Pacman::setWantedDirection(const Direction direction) { _wantedDirection = direction; }
 
 Direction Pacman::getWantedDirection() const { return _wantedDirection; }
 

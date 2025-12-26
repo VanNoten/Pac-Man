@@ -10,6 +10,8 @@ public:
     ~Random() = default;
     static Random* getInstance();
     [[nodiscard]] double randomDouble();
+    [[nodiscard]] bool chance(double probability);
+    [[nodiscard]] int randomIndex(int n);
 
 private:
     Random();
