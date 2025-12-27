@@ -19,6 +19,10 @@ private:
     static constexpr double SCORE_DECREASE_RATE = 1.0; // 1 per second
     static constexpr int COIN_VALUE = 10;
     static constexpr double MAX_MULTIPLIER_TIME = 3.0; // after 3 seconds you just get COIN_VALUE
+
+    static constexpr int FRUIT_VALUE = 100;
+
+    static constexpr int GHOST_VALUE = 200;
 };
 
 } // namespace logic

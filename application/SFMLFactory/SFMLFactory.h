@@ -12,8 +12,9 @@ public:
     std::unique_ptr<logic::Pacman> createPacman(float x, float y, float width, float height) override;
     std::unique_ptr<logic::Wall> createWall(float x, float y, float width, float height) override;
     std::unique_ptr<logic::Coin> createCoin(float x, float y, float width, float height) override;
-    std::unique_ptr<logic::Ghost> createGhost(float x, float y, float width, float height,
-                                              logic::GhostType ghostType) override;
+    std::unique_ptr<logic::Fruit> createFruit(float x, float y, float width, float height) override;
+    std::unique_ptr<logic::Ghost> createGhost(float x, float y, float width, float height, int spawnTileX,
+                                              int spawnTileY, logic::GhostType ghostType) override;
 
 private:
     std::shared_ptr<logic::Observer> _scoreObserver;

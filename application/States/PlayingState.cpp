@@ -45,10 +45,10 @@ void PlayingState::handleEvent(const sf::Event& event) {
 
 void PlayingState::update() {
     if (!_mapLoaded) {
-        const std::vector<std::string> map = {"####################", "#....#........#....#", "#.##.#.######.#.##.#",
+        const std::vector<std::string> map = {"####################", "#F...#........#....#", "#.##.#.######.#.##.#",
                                               "#.#..............#.#", "#.#.##.##..##.##.#.#", "#......#1234#......#",
                                               "#.#.##.######.##.#.#", "#.#..............#.#", "#.##.#.######.#.##.#",
-                                              "#....#....@...#....#", "####################"};
+                                              "#....#....@...#...F#", "####################"};
         _world->loadMap(map);
         _mapLoaded = true;
     }
@@ -92,7 +92,22 @@ void PlayingState::render(sf::RenderWindow& window) {
         window.draw(circle);
     }
 
-    for (const auto& ghost : _world->getGhosts()) {
+    for (const auto& fruit : _world->getFruits()) {
+        if (fruit->isCollected())
+            continue;
+
+        float screenX;
+        float screenY;
+        _camera->worldToScreen(fruit->getX(), fruit->getY(), screenX, screenY);
+        float radius = _camera->worldToScreenSize(fruit->getWidth() * 0.5f);
+
+        sf::CircleShape circle(radius);
+        circle.setPosition(screenX - radius, screenY - radius);
+        circle.setFillColor(sf::Color::Red);
+        window.draw(circle);
+    }
+
+    for (const auto& ghost : _world->getActiveGhosts()) {
         float screenX;
         float screenY;
         _camera->worldToScreen(ghost->getX(), ghost->getY(), screenX, screenY);
@@ -101,18 +116,22 @@ void PlayingState::render(sf::RenderWindow& window) {
         sf::CircleShape circle(radius);
         circle.setPosition(screenX - radius, screenY - radius);
 
-        switch (ghost->getGhostType()) {
-        case logic::GhostType::Locked:
-            circle.setFillColor(sf::Color::Red);
-            break;
-        case logic::GhostType::AheadChaser:
-            circle.setFillColor(sf::Color::Magenta);
-            break;
-        case logic::GhostType::Chaser:
-            circle.setFillColor(sf::Color::Yellow);
-            break;
-        default:
-            break;
+        if (!ghost->getIsFeared()) {
+            switch (ghost->getGhostType()) {
+            case logic::GhostType::Locked:
+                circle.setFillColor(sf::Color::Red);
+                break;
+            case logic::GhostType::AheadChaser:
+                circle.setFillColor(sf::Color::Magenta);
+                break;
+            case logic::GhostType::Chaser:
+                circle.setFillColor(sf::Color::Yellow);
+                break;
+            default:
+                break;
+            }
+        } else {
+            circle.setFillColor(sf::Color::Green);
         }
 
         window.draw(circle);

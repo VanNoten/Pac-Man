@@ -18,10 +18,10 @@ public:
 
 protected:
     EntityModel(float x, float y, float width, float height);
-    float _x;
-    float _y;
-    float _width;
-    float _height;
+    float _x = 0;
+    float _y = 0;
+    float _width = 0;
+    float _height = 0;
 };
 
 } // namespace logic

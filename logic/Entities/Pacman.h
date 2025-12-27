@@ -20,6 +20,8 @@ public:
     void setWantedDirection(Direction direction);
     [[nodiscard]] Direction getWantedDirection() const;
 
+    void eatGhost() const;
+
 private:
     Direction _direction = Direction::RIGHT;
     Direction _wantedDirection = Direction::RIGHT;

@@ -27,4 +27,6 @@ void Pacman::setWantedDirection(const Direction direction) { _wantedDirection = 
 
 Direction Pacman::getWantedDirection() const { return _wantedDirection; }
 
+void Pacman::eatGhost() const { notify(EventType::GhostEaten); }
+
 } // namespace logic

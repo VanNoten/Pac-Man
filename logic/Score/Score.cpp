@@ -14,6 +14,14 @@ void Score::update(EventType event) {
         _currentScore += static_cast<int>(COIN_VALUE * bonusMultiplier);
         _timeSinceLastIncrement = 0.0;
     }
+
+    if (event == EventType::FruitCollected) {
+        _currentScore += FRUIT_VALUE;
+    }
+
+    if (event == EventType::GhostEaten) {
+        _currentScore += GHOST_VALUE;
+    }
 }
 
 void Score::updateTick(float deltaTime) {

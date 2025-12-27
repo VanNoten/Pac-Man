@@ -31,13 +31,52 @@ void World::handleAction(Actions action) const {
 void World::update(const float deltaTime) {
     handlePacmanMovement(deltaTime);
 
+    if (!_allGhostsActive) {
+        activateGhosts(deltaTime);
+    }
+
+    if (_ghostsAreFeared) {
+        _fearedTimer -= deltaTime;
+
+        if (_fearedTimer <= 0.0f) {
+            _fearedTimer = 0.0f;
+            _ghostsAreFeared = false;
+
+            for (const auto& ghost : _ghosts) {
+                ghost->setIsFeared(false);
+            }
+        }
+    }
+
     for (auto& ghost : _ghosts) {
+        if (!ghost->getIsActive())
+            continue;
+
         handleGhostMovement(*ghost, deltaTime);
+
+        if (isColliding(_pacman->getBounds(), ghost->getBounds())) {
+            if (ghost->getIsFeared()) {
+                const int tileX = ghost->getSpawnTileX();
+                const int tileY = ghost->getSpawnTileY();
+                const float tileCenterX = getTileCenterX(tileX);
+                const float tileCenterY = getTileCenterY(tileY);
+                ghost->setPosition(tileCenterX, tileCenterY);
+                ghost->setIsFeared(false);
+                _pacman->eatGhost();
+            }
+        }
     }
 
     for (const auto& coin : _coins) {
         if (!coin->isCollected() && isColliding(_pacman->getBounds(), coin->getBounds())) {
             coin->collect();
+        }
+    }
+
+    for (const auto& fruit : _fruits) {
+        if (!fruit->isCollected() && isColliding(_pacman->getBounds(), fruit->getBounds())) {
+            fruit->collect();
+            fearGhosts();
         }
     }
 }
@@ -75,18 +114,37 @@ void World::loadMap(const std::vector<std::string>& map) {
             case '.':
                 _coins.push_back(_factory.createCoin(x, y, _cell * 0.2f, _cell * 0.2f));
                 break;
-            case '1':
-                _ghosts.push_back(_factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, GhostType::Locked));
+            case 'F':
+                _fruits.push_back(_factory.createFruit(x, y, _cell * 0.6f, _cell * 0.6f));
                 break;
-            case '2':
-                _ghosts.push_back(_factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, GhostType::AheadChaser));
-                break;
-            case '3':
-                _ghosts.push_back(_factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, GhostType::AheadChaser));
-                break;
-            case '4':
-                _ghosts.push_back(_factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, GhostType::Chaser));
-                break;
+            case '1': {
+                std::unique_ptr<Ghost> ghost =
+                    _factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, c, r, GhostType::Locked);
+                ghost->setActive(false);
+                _ghosts.push_back(std::move(ghost));
+                _ghostDelayTimers.push_back(GHOST_1_DELAY);
+            } break;
+            case '2': {
+                std::unique_ptr<Ghost> ghost =
+                    _factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, c, r, GhostType::AheadChaser);
+                ghost->setActive(false);
+                _ghosts.push_back(std::move(ghost));
+                _ghostDelayTimers.push_back(GHOST_2_DELAY);
+            } break;
+            case '3': {
+                std::unique_ptr<Ghost> ghost =
+                    _factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, c, r, GhostType::AheadChaser);
+                ghost->setActive(false);
+                _ghosts.push_back(std::move(ghost));
+                _ghostDelayTimers.push_back(GHOST_3_DELAY);
+            } break;
+            case '4': {
+                std::unique_ptr<Ghost> ghost =
+                    _factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, c, r, GhostType::Chaser);
+                ghost->setActive(false);
+                _ghosts.push_back(std::move(ghost));
+                _ghostDelayTimers.push_back(GHOST_4_DELAY);
+            } break;
             default:
                 break;
             }
@@ -98,7 +156,9 @@ const std::vector<std::unique_ptr<Wall>>& World::getWalls() const { return _wall
 
 const std::vector<std::unique_ptr<Coin>>& World::getCoins() const { return _coins; }
 
-const std::vector<std::unique_ptr<Ghost>>& World::getGhosts() const { return _ghosts; }
+const std::vector<std::unique_ptr<Fruit>>& World::getFruits() const { return _fruits; }
+
+const std::vector<std::unique_ptr<Ghost>>& World::getActiveGhosts() const { return _ghosts; }
 
 Pacman& World::getPacman() const { return *_pacman; }
 
@@ -192,7 +252,13 @@ void World::handleGhostMovement(Ghost& ghost, const float deltaTime) const {
     if (distanceToCenterTile < moveDistance * moveDistance + 1e-4f && isNewTile) {
         ghost.setLastDecisionTile(tileX, tileY);
 
-        Direction nextDirection = getNextGhostDirection(ghost);
+        Direction nextDirection;
+        if (!ghost.getIsFeared()) {
+            nextDirection = getNextGhostDirection(ghost);
+        } else {
+            nextDirection = getNextFearedGhostDirection(ghost);
+        }
+
         ghost.setDirection(nextDirection);
         if (currentDirection != nextDirection) {
             ghost.setPosition(centerX, centerY);
@@ -225,6 +291,47 @@ void World::handleGhostMovement(Ghost& ghost, const float deltaTime) const {
     }
 
     ghost.move(moveX, moveY);
+}
+
+void World::activateGhosts(const float deltaTime) {
+    for (int i = 0; i < _ghostDelayTimers.size(); i++) {
+        if (i < _ghosts.size() && !_ghosts[i]->getIsActive()) {
+            if (_ghostDelayTimers[i] > 0.0f) {
+                _ghostDelayTimers[i] -= deltaTime;
+            }
+
+            if (_ghostDelayTimers[i] <= 0.0f) {
+                _ghosts[i]->setActive(true);
+            }
+        }
+    }
+
+    _allGhostsActive = true;
+    for (const auto& ghost : _ghosts) {
+        if (!ghost->getIsActive()) {
+            _allGhostsActive = false;
+            break;
+        }
+    }
+}
+
+void World::fearGhosts() {
+    _fearedTimer = FEARED_MODE_DURATION;
+    _ghostsAreFeared = true;
+
+    for (const auto& ghost : _ghosts) {
+        if (!ghost->getIsFeared()) {
+            const Direction reverseDirection = getReverseDirection(ghost->getDirection());
+            const int ghostTileX = getTileX(ghost->getX());
+            const int ghostTileY = getTileY(ghost->getY());
+            std::pair<int, int> reverseTile = getTileInDirection(ghostTileX, ghostTileY, reverseDirection);
+            if (!isWallAtTile(reverseTile.first, reverseTile.second)) {
+                ghost->setDirection(reverseDirection);
+            }
+        }
+
+        ghost->setIsFeared(true);
+    }
 }
 
 bool World::isColliding(const Bounds& A, const Bounds& B) {
@@ -272,15 +379,10 @@ int World::getManhattanDistance(const int fromTileX, const int fromTileY, const 
     return abs(fromTileX - toTileX) + abs(fromTileY - toTileY);
 }
 
-std::vector<Direction> World::getPossibleDirections(const Ghost& ghost) const {
-    std::vector<Direction> possibleDirections = {};
-    const int tileX = getTileX(ghost.getX());
-    const int tileY = getTileY(ghost.getY());
+Direction World::getReverseDirection(const Direction direction) {
+    Direction reverseDirection = {};
 
-    const Direction ghostDirection = ghost.getDirection();
-    Direction reverseDirection;
-
-    switch (ghostDirection) {
+    switch (direction) {
     case Direction::UP:
         reverseDirection = Direction::DOWN;
         break;
@@ -296,6 +398,16 @@ std::vector<Direction> World::getPossibleDirections(const Ghost& ghost) const {
     default:
         break;
     }
+
+    return reverseDirection;
+}
+
+std::vector<Direction> World::getPossibleDirections(const Ghost& ghost) const {
+    std::vector<Direction> possibleDirections = {};
+    const int tileX = getTileX(ghost.getX());
+    const int tileY = getTileY(ghost.getY());
+
+    Direction reverseDirection = getReverseDirection(ghost.getDirection());
 
     if (!isWallAtTile(tileX, tileY - 1) && reverseDirection != Direction::UP)
         possibleDirections.push_back(Direction::UP);
@@ -422,6 +534,42 @@ Direction World::getNextGhostDirection(const Ghost& ghost) const {
         }
 
         return ghost.getDirection();
+    }
+
+    return ghost.getDirection();
+}
+
+Direction World::getNextFearedGhostDirection(const Ghost& ghost) const {
+    std::vector<Direction> possibleDirections = getPossibleDirections(ghost);
+
+    if (possibleDirections.size() == 1)
+        return possibleDirections[0];
+
+    int maxManhattanDistance = -1;
+    std::vector<Direction> bestDirections;
+
+    const int pacTileX = getTileX(_pacman->getX());
+    const int pacTileY = getTileY(_pacman->getY());
+
+    const int ghostTileX = getTileX(ghost.getX());
+    const int ghostTileY = getTileY(ghost.getY());
+
+    for (const auto& direction : possibleDirections) {
+        std::pair<int, int> nextGhostTile = getTileInDirection(ghostTileX, ghostTileY, direction);
+
+        int manhattanDistance = getManhattanDistance(nextGhostTile.first, nextGhostTile.second, pacTileX, pacTileY);
+
+        if (manhattanDistance > maxManhattanDistance) {
+            maxManhattanDistance = manhattanDistance;
+            bestDirections.clear();
+            bestDirections.push_back(direction);
+        } else if (manhattanDistance == maxManhattanDistance) {
+            bestDirections.push_back(direction);
+        }
+    }
+
+    if (!bestDirections.empty()) {
+        return bestDirections[Random::getInstance()->randomIndex(bestDirections.size())];
     }
 
     return ghost.getDirection();
