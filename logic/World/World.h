@@ -13,7 +13,7 @@ namespace logic {
 
 enum class Actions { Up, Down, Left, Right };
 
-class World {
+class World : public Subject {
 public:
     World(AbstractFactory& factory);
     ~World() = default;
@@ -21,6 +21,7 @@ public:
     void handleAction(Actions action) const;
     void update(float deltaTime);
     void loadMap(const std::vector<std::string>& map);
+    [[nodiscard]] bool getIsGameOver() const;
     [[nodiscard]] const std::vector<std::unique_ptr<Wall>>& getWalls() const;
     [[nodiscard]] const std::vector<std::unique_ptr<Coin>>& getCoins() const;
     [[nodiscard]] const std::vector<std::unique_ptr<Fruit>>& getFruits() const;
@@ -66,6 +67,8 @@ private:
     static constexpr float GHOST_2_DELAY = 0.0f;
     static constexpr float GHOST_3_DELAY = 5.0f;
     static constexpr float GHOST_4_DELAY = 10.0f;
+
+    bool _isGameOver = false;
 };
 
 } // namespace logic

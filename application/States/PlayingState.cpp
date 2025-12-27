@@ -1,5 +1,6 @@
 #include "PlayingState.h"
 
+#include "MenuState.h"
 #include "PausedState.h"
 
 #include <SFML/Graphics/CircleShape.hpp>
@@ -50,6 +51,7 @@ void PlayingState::update() {
                                               "#.#.##.######.##.#.#", "#.#..............#.#", "#.##.#.######.#.##.#",
                                               "#....#....@...#...F#", "####################"};
         _world->loadMap(map);
+        _world->addObserver(_score);
         _mapLoaded = true;
     }
 
@@ -57,6 +59,11 @@ void PlayingState::update() {
 
     _world->update(deltaTime);
     _score->updateTick(deltaTime);
+
+    if (_world->getIsGameOver()) {
+        _stateManager.changeState(std::make_unique<MenuState>(_stateManager));
+        return;
+    }
 }
 
 void PlayingState::render(sf::RenderWindow& window) {

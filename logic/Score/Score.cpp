@@ -1,7 +1,12 @@
 #include "Score.h"
+
+#include <algorithm>
+#include <fstream>
 #include <iostream>
 
 namespace logic {
+
+Score::Score() { loadHighscores(); }
 
 void Score::update(EventType event) {
     if (event == EventType::CoinCollected) {
@@ -22,6 +27,10 @@ void Score::update(EventType event) {
     if (event == EventType::GhostEaten) {
         _currentScore += GHOST_VALUE;
     }
+
+    if (event == EventType::GameOver) {
+        saveScore();
+    }
 }
 
 void Score::updateTick(float deltaTime) {
@@ -41,5 +50,44 @@ void Score::updateTick(float deltaTime) {
 }
 
 int Score::getCurrentScore() const { return _currentScore; }
+
+void Score::saveScore() const {
+    std::vector<int> scores = _highscores;
+    scores.push_back(_currentScore);
+    std::sort(scores.rbegin(), scores.rend());
+
+    if (scores.size() > 5) {
+        scores.resize(5);
+    }
+
+    std::ofstream file(HIGHSCORES_FILE);
+    if (file.is_open()) {
+        for (const int score : scores) {
+            file << score << "\n";
+        }
+        file.close();
+    }
+}
+
+void Score::loadHighscores() {
+    std::vector<int> scores;
+    std::ifstream file(HIGHSCORES_FILE);
+
+    if (file.is_open()) {
+        int score;
+        while (file >> score) {
+            scores.push_back(score);
+        }
+        file.close();
+    }
+
+    std::sort(scores.rbegin(), scores.rend());
+
+    if (scores.size() > 5) {
+        scores.resize(5);
+    }
+
+    _highscores = scores;
+}
 
 } // namespace logic

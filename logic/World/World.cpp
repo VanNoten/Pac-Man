@@ -154,6 +154,8 @@ void World::loadMap(const std::vector<std::string>& map) {
     }
 }
 
+bool World::getIsGameOver() const { return _isGameOver; }
+
 const std::vector<std::unique_ptr<Wall>>& World::getWalls() const { return _walls; }
 
 const std::vector<std::unique_ptr<Coin>>& World::getCoins() const { return _coins; }
@@ -338,6 +340,12 @@ void World::fearGhosts() {
 
 void World::handlePacmanDeath() {
     _pacman->die();
+
+    if (_pacman->getLives() <= 0) {
+        notify(EventType::GameOver);
+        _isGameOver = true;
+        return;
+    }
 
     const int pacSpawnTileX = _pacman->getSpawnTileX();
     const int pacSpawnTileY = _pacman->getSpawnTileY();
