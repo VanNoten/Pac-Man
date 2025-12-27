@@ -63,6 +63,8 @@ void World::update(const float deltaTime) {
                 ghost->setPosition(tileCenterX, tileCenterY);
                 ghost->setIsFeared(false);
                 _pacman->eatGhost();
+            } else {
+                handlePacmanDeath();
             }
         }
     }
@@ -109,7 +111,7 @@ void World::loadMap(const std::vector<std::string>& map) {
                 _walls.push_back(_factory.createWall(x, y, _cell, _cell));
                 break;
             case '@':
-                _pacman = _factory.createPacman(x, y, _cell * 0.9f, _cell * 0.9f);
+                _pacman = _factory.createPacman(x, y, _cell * 0.9f, _cell * 0.9f, c, r);
                 break;
             case '.':
                 _coins.push_back(_factory.createCoin(x, y, _cell * 0.2f, _cell * 0.2f));
@@ -331,6 +333,20 @@ void World::fearGhosts() {
         }
 
         ghost->setIsFeared(true);
+    }
+}
+
+void World::handlePacmanDeath() {
+    _pacman->die();
+
+    const int pacSpawnTileX = _pacman->getSpawnTileX();
+    const int pacSpawnTileY = _pacman->getSpawnTileY();
+    _pacman->setPosition(getTileCenterX(pacSpawnTileX), getTileCenterY(pacSpawnTileY));
+
+    for (const auto& ghost : _ghosts) {
+        const int spawnTileX = ghost->getSpawnTileX();
+        const int spawnTileY = ghost->getSpawnTileY();
+        ghost->setPosition(getTileCenterX(spawnTileX), getTileCenterY(spawnTileY));
     }
 }
 

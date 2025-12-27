@@ -165,6 +165,14 @@ void PlayingState::render(sf::RenderWindow& window) {
     scoreText.setFillColor(sf::Color::White);
     scoreText.setPosition(0, 30);
     window.draw(scoreText);
+
+    sf::Text livesText;
+    livesText.setFont(arial);
+    livesText.setString("Lives: " + std::to_string(_world->getPacman().getLives()));
+    livesText.setCharacterSize(24);
+    livesText.setFillColor(sf::Color::White);
+    livesText.setPosition(0, 60);
+    window.draw(livesText);
 }
 
 } // namespace application

@@ -7,7 +7,7 @@ namespace logic {
 
 class Pacman : public EntityModel {
 public:
-    Pacman(float x, float y, float width, float height);
+    Pacman(float x, float y, float width, float height, int spawnTileX, int spawnTileY);
     void update(float deltaTime) override;
 
     void move(float x, float y);
@@ -20,12 +20,21 @@ public:
     void setWantedDirection(Direction direction);
     [[nodiscard]] Direction getWantedDirection() const;
 
+    [[nodiscard]] int getSpawnTileX() const;
+    [[nodiscard]] int getSpawnTileY() const;
+
     void eatGhost() const;
+
+    void die();
+    int getLives() const;
 
 private:
     Direction _direction = Direction::RIGHT;
     Direction _wantedDirection = Direction::RIGHT;
+    int _spawnTileX = 0;
+    int _spawnTileY = 0;
     float _speed = 0.3f;
+    int _livesLeft = 3;
 };
 
 } // namespace logic

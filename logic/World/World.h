@@ -32,6 +32,7 @@ private:
     void handleGhostMovement(Ghost& ghost, float deltaTime) const;
     void activateGhosts(float deltaTime);
     void fearGhosts();
+    void handlePacmanDeath();
     [[nodiscard]] static bool isColliding(const Bounds& A, const Bounds& B);
     [[nodiscard]] float getTileCenterX(int tileX) const;
     [[nodiscard]] float getTileCenterY(int tileY) const;

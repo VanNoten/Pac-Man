@@ -4,8 +4,10 @@ namespace application {
 
 void SFMLFactory::setScoreObserver(const std::shared_ptr<logic::Observer>& observer) { _scoreObserver = observer; }
 
-std::unique_ptr<logic::Pacman> SFMLFactory::createPacman(float x, float y, float width, float height) {
-    std::unique_ptr<logic::Pacman> pacman = std::make_unique<logic::Pacman>(x, y, width, height);
+std::unique_ptr<logic::Pacman> SFMLFactory::createPacman(float x, float y, float width, float height, int spawnTileX,
+                                                         int spawnTileY) {
+    std::unique_ptr<logic::Pacman> pacman =
+        std::make_unique<logic::Pacman>(x, y, width, height, spawnTileX, spawnTileY);
 
     if (_scoreObserver)
         pacman->addObserver(_scoreObserver);
