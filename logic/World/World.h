@@ -5,6 +5,7 @@
 
 #include <AbstractFactory/AbstractFactory.h>
 #include <Entities/Pacman.h>
+#include <Observer/Subject.h>
 #include <memory>
 #include <string>
 #include <vector>

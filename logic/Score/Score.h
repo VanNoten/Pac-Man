@@ -14,6 +14,7 @@ public:
     void update(EventType event) override;
     void updateTick(float deltaTime);
     [[nodiscard]] int getCurrentScore() const;
+    [[nodiscard]] std::vector<int> getHighscores() const;
 
 private:
     void saveScore() const;

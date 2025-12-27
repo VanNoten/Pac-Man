@@ -51,6 +51,8 @@ void Score::updateTick(float deltaTime) {
 
 int Score::getCurrentScore() const { return _currentScore; }
 
+std::vector<int> Score::getHighscores() const { return _highscores; }
+
 void Score::saveScore() const {
     std::vector<int> scores = _highscores;
     scores.push_back(_currentScore);

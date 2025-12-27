@@ -4,6 +4,8 @@
 #include "State.h"
 #include "StateManager.h"
 
+#include <Score/Score.h>
+
 namespace application {
 
 class MenuState : public State {
@@ -15,6 +17,7 @@ public:
 
 private:
     StateManager& _stateManager;
+    std::shared_ptr<logic::Score> _score;
 };
 
 } // namespace application
