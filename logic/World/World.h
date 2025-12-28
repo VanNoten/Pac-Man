@@ -35,6 +35,8 @@ private:
     void activateGhosts(float deltaTime);
     void fearGhosts();
     void handlePacmanDeath();
+    void handleNextLevel();
+    void resetGhostsAndPacman();
     [[nodiscard]] static bool isColliding(const Bounds& A, const Bounds& B);
     [[nodiscard]] float getTileCenterX(int tileX) const;
     [[nodiscard]] float getTileCenterY(int tileY) const;
@@ -59,17 +61,17 @@ private:
     std::unique_ptr<Pacman> _pacman;
 
     float _fearedTimer = 0.0f;
-    static constexpr float FEARED_MODE_DURATION = 6.0f;
     bool _ghostsAreFeared = false;
 
     std::vector<float> _ghostDelayTimers = {};
+    std::vector<float> _originalGhostDelayTimers = {};
     bool _allGhostsActive = false;
-    static constexpr float GHOST_1_DELAY = 0.0f;
-    static constexpr float GHOST_2_DELAY = 0.0f;
-    static constexpr float GHOST_3_DELAY = 5.0f;
-    static constexpr float GHOST_4_DELAY = 10.0f;
 
     bool _isGameOver = false;
+
+    int _collectablesLeft = 0;
+
+    int _currentLevel = 1;
 };
 
 } // namespace logic

@@ -1,5 +1,6 @@
 #include "Score.h"
 
+#include <Util/Constants.h>
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -10,31 +11,37 @@ Score::Score() { loadHighscores(); }
 
 void Score::update(EventType event) {
     if (event == EventType::CoinCollected) {
-        const double timeWindow = _timeSinceLastIncrement < MAX_MULTIPLIER_TIME && _timeSinceLastIncrement > 0.0
-                                      ? _timeSinceLastIncrement
-                                      : MAX_MULTIPLIER_TIME;
+        const double timeWindow =
+            _timeSinceLastIncrement < GameConstants::MAX_MULTIPLIER_TIME && _timeSinceLastIncrement > 0.0
+                ? _timeSinceLastIncrement
+                : GameConstants::MAX_MULTIPLIER_TIME;
 
         // right now max multiplier is x2
-        const double bonusMultiplier = 1.0 + (MAX_MULTIPLIER_TIME - timeWindow) / MAX_MULTIPLIER_TIME;
-        _currentScore += static_cast<int>(COIN_VALUE * bonusMultiplier);
+        const double bonusMultiplier =
+            1.0 + (GameConstants::MAX_MULTIPLIER_TIME - timeWindow) / GameConstants::MAX_MULTIPLIER_TIME;
+        _currentScore += static_cast<int>(GameConstants::COIN_VALUE * bonusMultiplier);
         _timeSinceLastIncrement = 0.0;
     }
 
     if (event == EventType::FruitCollected) {
-        _currentScore += FRUIT_VALUE;
+        _currentScore += GameConstants::FRUIT_VALUE;
     }
 
     if (event == EventType::GhostEaten) {
-        _currentScore += GHOST_VALUE;
+        _currentScore += GameConstants::GHOST_VALUE;
     }
 
     if (event == EventType::GameOver) {
         saveScore();
     }
+
+    if (event == EventType::LevelCleared) {
+        _currentScore += GameConstants::LEVEL_CLEAR_VALUE;
+    }
 }
 
 void Score::updateTick(float deltaTime) {
-    _accumulatedDecrease += SCORE_DECREASE_RATE * deltaTime;
+    _accumulatedDecrease += GameConstants::SCORE_DECREASE_RATE * deltaTime;
 
     if (_accumulatedDecrease >= 1.0) {
         const int decreaseAmount = static_cast<int>(_accumulatedDecrease);

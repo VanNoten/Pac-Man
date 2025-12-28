@@ -3,6 +3,8 @@
 #include "EntityModel.h"
 #include "Util/Structs.h"
 
+#include <Util/Constants.h>
+
 namespace logic {
 
 class Pacman : public EntityModel {
@@ -33,8 +35,8 @@ private:
     Direction _wantedDirection = Direction::RIGHT;
     int _spawnTileX = 0;
     int _spawnTileY = 0;
-    float _speed = 0.3f;
-    int _livesLeft = 3;
+    float _speed = GameConstants::BASE_PACMAN_SPEED;
+    int _livesLeft = GameConstants::STARTING_LIVES;
 };
 
 } // namespace logic

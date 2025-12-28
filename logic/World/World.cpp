@@ -1,5 +1,6 @@
 #include "World.h"
 
+#include <Util/Constants.h>
 #include <Util/Random.h>
 #include <algorithm>
 #include <cmath>
@@ -72,12 +73,21 @@ void World::update(const float deltaTime) {
     for (const auto& coin : _coins) {
         if (!coin->isCollected() && isColliding(_pacman->getBounds(), coin->getBounds())) {
             coin->collect();
+            _collectablesLeft--;
+            if (_collectablesLeft <= 0) {
+                handleNextLevel();
+            }
         }
     }
 
     for (const auto& fruit : _fruits) {
         if (!fruit->isCollected() && isColliding(_pacman->getBounds(), fruit->getBounds())) {
             fruit->collect();
+            _collectablesLeft--;
+            if (_collectablesLeft <= 0) {
+                handleNextLevel();
+            }
+
             fearGhosts();
         }
     }
@@ -115,37 +125,43 @@ void World::loadMap(const std::vector<std::string>& map) {
                 break;
             case '.':
                 _coins.push_back(_factory.createCoin(x, y, _cell * 0.2f, _cell * 0.2f));
+                _collectablesLeft += 1;
                 break;
             case 'F':
                 _fruits.push_back(_factory.createFruit(x, y, _cell * 0.6f, _cell * 0.6f));
+                _collectablesLeft += 1;
                 break;
             case '1': {
                 std::unique_ptr<Ghost> ghost =
                     _factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, c, r, GhostType::Locked);
                 ghost->setActive(false);
                 _ghosts.push_back(std::move(ghost));
-                _ghostDelayTimers.push_back(GHOST_1_DELAY);
+                _ghostDelayTimers.push_back(GameConstants::GHOST_1_DELAY);
+                _originalGhostDelayTimers.push_back(GameConstants::GHOST_1_DELAY);
             } break;
             case '2': {
                 std::unique_ptr<Ghost> ghost =
                     _factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, c, r, GhostType::AheadChaser);
                 ghost->setActive(false);
                 _ghosts.push_back(std::move(ghost));
-                _ghostDelayTimers.push_back(GHOST_2_DELAY);
+                _ghostDelayTimers.push_back(GameConstants::GHOST_2_DELAY);
+                _originalGhostDelayTimers.push_back(GameConstants::GHOST_2_DELAY);
             } break;
             case '3': {
                 std::unique_ptr<Ghost> ghost =
                     _factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, c, r, GhostType::AheadChaser);
                 ghost->setActive(false);
                 _ghosts.push_back(std::move(ghost));
-                _ghostDelayTimers.push_back(GHOST_3_DELAY);
+                _ghostDelayTimers.push_back(GameConstants::GHOST_3_DELAY);
+                _originalGhostDelayTimers.push_back(GameConstants::GHOST_3_DELAY);
             } break;
             case '4': {
                 std::unique_ptr<Ghost> ghost =
                     _factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, c, r, GhostType::Chaser);
                 ghost->setActive(false);
                 _ghosts.push_back(std::move(ghost));
-                _ghostDelayTimers.push_back(GHOST_4_DELAY);
+                _ghostDelayTimers.push_back(GameConstants::GHOST_4_DELAY);
+                _originalGhostDelayTimers.push_back(GameConstants::GHOST_4_DELAY);
             } break;
             default:
                 break;
@@ -320,7 +336,9 @@ void World::activateGhosts(const float deltaTime) {
 }
 
 void World::fearGhosts() {
-    _fearedTimer = FEARED_MODE_DURATION;
+    _fearedTimer = std::max(GameConstants::BASE_FEARED_DURATION -
+                                GameConstants::FEARED_DURATION_DECREASE_PER_LEVEL * (_currentLevel - 1),
+                            GameConstants::MIN_FEARED_DURATION);
     _ghostsAreFeared = true;
 
     for (const auto& ghost : _ghosts) {
@@ -347,6 +365,48 @@ void World::handlePacmanDeath() {
         return;
     }
 
+    resetGhostsAndPacman();
+}
+
+void World::handleNextLevel() {
+    _currentLevel++;
+    notify(EventType::LevelCleared);
+
+    for (const auto& coin : _coins) {
+        coin->reset();
+    }
+    for (const auto& fruit : _fruits) {
+        fruit->reset();
+    }
+    _collectablesLeft = _coins.size() + _fruits.size();
+
+    resetGhostsAndPacman();
+
+    _allGhostsActive = false;
+    for (int i = 0; i < _originalGhostDelayTimers.size(); i++) {
+        if (i < _ghosts.size() && i < _ghostDelayTimers.size()) {
+            _ghosts[i]->setActive(false);
+            _ghostDelayTimers[i] = _originalGhostDelayTimers[i];
+        }
+    }
+
+    const float newGhostSpeed =
+        std::min(GameConstants::BASE_GHOST_SPEED + (GameConstants::SPEED_INCREASE_PER_LEVEL * (_currentLevel - 1)),
+                 GameConstants::MAX_GHOST_SPEED);
+
+    const float newFearedGhostSpeed = std::min(GameConstants::BASE_FEARED_GHOST_SPEED +
+                                                   (GameConstants::SPEED_INCREASE_PER_LEVEL * (_currentLevel - 1)),
+                                               GameConstants::MAX_FEARED_GHOST_SPEED);
+
+    _ghostsAreFeared = false;
+    _fearedTimer = 0.0f;
+    for (const auto& ghost : _ghosts) {
+        ghost->setIsFeared(false);
+        ghost->setSpeeds(newGhostSpeed, newFearedGhostSpeed);
+    }
+}
+
+void World::resetGhostsAndPacman() {
     const int pacSpawnTileX = _pacman->getSpawnTileX();
     const int pacSpawnTileY = _pacman->getSpawnTileY();
     _pacman->setPosition(getTileCenterX(pacSpawnTileX), getTileCenterY(pacSpawnTileY));

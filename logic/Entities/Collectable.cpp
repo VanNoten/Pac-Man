@@ -6,4 +6,6 @@ Collectable::Collectable(float x, float y, float width, float height) : EntityMo
 
 bool Collectable::isCollected() const { return _isCollected; }
 
+void Collectable::reset() { _isCollected = false; }
+
 } // namespace logic

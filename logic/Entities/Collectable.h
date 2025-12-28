@@ -11,6 +11,7 @@ public:
     void update(float deltaTime) override {}
     [[nodiscard]] bool isCollected() const;
     virtual void collect() = 0;
+    void reset();
 
 protected:
     bool _isCollected = false;

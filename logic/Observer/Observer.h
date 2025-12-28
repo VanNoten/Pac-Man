@@ -3,7 +3,7 @@
 
 namespace logic {
 
-enum class EventType { Move, CoinCollected, FruitCollected, GhostEaten, GameOver };
+enum class EventType { Move, CoinCollected, FruitCollected, GhostEaten, GameOver, LevelCleared };
 
 class Observer {
 public:

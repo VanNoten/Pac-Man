@@ -18,6 +18,11 @@ void Ghost::setPosition(const float x, const float y) {
     _y = y;
 }
 
+void Ghost::setSpeeds(const float chasingSpeed, const float fearedSpeed) {
+    _speed = chasingSpeed;
+    _fearedSpeed = fearedSpeed;
+}
+
 float Ghost::getSpeed() const {
     if (_isFeared) {
         return _fearedSpeed;

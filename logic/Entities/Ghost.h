@@ -2,6 +2,8 @@
 #define GHOST_H
 #include "EntityModel.h"
 
+#include <Util/Constants.h>
+
 namespace logic {
 
 enum class GhostType { Locked, AheadChaser, Chaser };
@@ -12,6 +14,7 @@ public:
     void update(float deltaTime) override;
     void move(float x, float y);
     void setPosition(float x, float y);
+    void setSpeeds(float chasingSpeed, float fearedSpeed);
     [[nodiscard]] float getSpeed() const;
 
     [[nodiscard]] GhostType getGhostType() const;
@@ -38,8 +41,8 @@ private:
     int _spawnTileY = 0;
     int _lastDecisionTileX = 0;
     int _lastDecisionTileY = 0;
-    float _speed = 0.3f;
-    float _fearedSpeed = 0.2f;
+    float _speed = GameConstants::BASE_GHOST_SPEED;
+    float _fearedSpeed = GameConstants::BASE_FEARED_GHOST_SPEED;
     GhostType _ghostType;
     bool _isFeared = false;
     bool _isActive = false;
