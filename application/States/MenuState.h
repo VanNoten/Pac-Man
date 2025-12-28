@@ -18,6 +18,7 @@ public:
 private:
     StateManager& _stateManager;
     std::shared_ptr<logic::Score> _score;
+    sf::FloatRect _playButtonBounds;
 };
 
 } // namespace application

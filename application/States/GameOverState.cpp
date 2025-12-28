@@ -1,25 +1,23 @@
-#include "PausedState.h"
+#include "GameOverState.h"
 
 #include "MenuState.h"
+#include "PlayingState.h"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Window/Mouse.hpp>
 
 namespace application {
 
-PausedState::PausedState(StateManager& stateManager) : _stateManager(stateManager) {}
+GameOverState::GameOverState(StateManager& stateManager) : _stateManager(stateManager) {}
 
-void PausedState::handleEvent(const sf::Event& event) {
-    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
-        _stateManager.popState();
-    }
-
+void GameOverState::handleEvent(const sf::Event& event) {
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         sf::Vector2i mousePos = {event.mouseButton.x, event.mouseButton.y};
 
-        if (_resumeButtonBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-            _stateManager.popState();
+        if (_restartButtonBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+            _stateManager.changeState(std::make_unique<PlayingState>(_stateManager));
         }
 
         if (_mainMenuButtonBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
@@ -28,9 +26,9 @@ void PausedState::handleEvent(const sf::Event& event) {
     }
 }
 
-void PausedState::update() {}
+void GameOverState::update() {}
 
-void PausedState::render(sf::RenderWindow& window) {
+void GameOverState::render(sf::RenderWindow& window) {
     sf::Font arial;
     arial.loadFromFile("C:\\Windows\\Fonts\\Arial.ttf");
 
@@ -42,9 +40,17 @@ void PausedState::render(sf::RenderWindow& window) {
     float centerX = window.getSize().x / 2.0f;
     float centerY = window.getSize().y / 2.0f;
 
+    sf::Text gameOverText;
+    gameOverText.setFont(arial);
+    gameOverText.setString("Game Over");
+    gameOverText.setCharacterSize(72);
+    gameOverText.setFillColor(sf::Color::Yellow);
+    gameOverText.setPosition(centerX - gameOverText.getLocalBounds().width / 2.0f, 100.0f);
+    window.draw(gameOverText);
+
     sf::Text tempText;
     tempText.setFont(arial);
-    tempText.setString("Resume Game");
+    tempText.setString("Restart Game");
     tempText.setCharacterSize(36);
     float buttonWidth = tempText.getLocalBounds().width * 1.6f;
     float buttonHeight = tempText.getLocalBounds().height * 2.0f;
@@ -53,25 +59,25 @@ void PausedState::render(sf::RenderWindow& window) {
     float totalHeight = (buttonHeight * 2) + buttonSpacing;
     float yPosition = centerY - totalHeight / 2.0f;
 
-    sf::Text resumeText;
-    resumeText.setFont(arial);
-    resumeText.setString("Resume Game");
-    resumeText.setCharacterSize(36);
-    resumeText.setFillColor(sf::Color::White);
+    sf::Text restartText;
+    restartText.setFont(arial);
+    restartText.setString("Restart Game");
+    restartText.setCharacterSize(36);
+    restartText.setFillColor(sf::Color::White);
 
-    sf::RectangleShape resumeRect({buttonWidth, buttonHeight});
-    resumeRect.setPosition(centerX - buttonWidth / 2.0f, yPosition);
-    resumeRect.setFillColor(sf::Color::Blue);
+    sf::RectangleShape restartRect({buttonWidth, buttonHeight});
+    restartRect.setPosition(centerX - buttonWidth / 2.0f, yPosition);
+    restartRect.setFillColor(sf::Color::Blue);
 
-    _resumeButtonBounds = resumeRect.getGlobalBounds();
+    _restartButtonBounds = restartRect.getGlobalBounds();
 
-    sf::FloatRect textBounds = resumeText.getLocalBounds();
-    resumeText.setPosition(
-        resumeRect.getPosition().x + resumeRect.getSize().x / 2.0f - (textBounds.left + textBounds.width / 2.0f),
-        resumeRect.getPosition().y + resumeRect.getSize().y / 2.0f - (textBounds.top + textBounds.height / 2.0f));
+    sf::FloatRect textBounds = restartText.getLocalBounds();
+    restartText.setPosition(
+        restartRect.getPosition().x + restartRect.getSize().x / 2.0f - (textBounds.left + textBounds.width / 2.0f),
+        restartRect.getPosition().y + restartRect.getSize().y / 2.0f - (textBounds.top + textBounds.height / 2.0f));
 
-    window.draw(resumeRect);
-    window.draw(resumeText);
+    window.draw(restartRect);
+    window.draw(restartText);
 
     yPosition += buttonHeight + buttonSpacing;
 

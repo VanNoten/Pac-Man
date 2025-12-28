@@ -1,23 +1,23 @@
-#ifndef PAUSEDSTATE_H
-#define PAUSEDSTATE_H
+#ifndef GAMEOVERSTATE_H
+#define GAMEOVERSTATE_H
 #include "State.h"
 #include "StateManager.h"
 
 namespace application {
 
-class PausedState : public State {
+class GameOverState : public State {
 public:
-    explicit PausedState(StateManager& stateManager);
+    explicit GameOverState(StateManager& stateManager);
     void handleEvent(const sf::Event& event) override;
     void update() override;
     void render(sf::RenderWindow& window) override;
 
 private:
     StateManager& _stateManager;
-    sf::FloatRect _resumeButtonBounds;
+    sf::FloatRect _restartButtonBounds;
     sf::FloatRect _mainMenuButtonBounds;
 };
 
 } // namespace application
 
-#endif // PAUSEDSTATE_H
+#endif // GAMEOVERSTATE_H

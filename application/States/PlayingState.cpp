@@ -1,5 +1,6 @@
 #include "PlayingState.h"
 
+#include "GameOverState.h"
 #include "MenuState.h"
 #include "PausedState.h"
 
@@ -61,7 +62,7 @@ void PlayingState::update() {
     _score->updateTick(deltaTime);
 
     if (_world->getIsGameOver()) {
-        _stateManager.changeState(std::make_unique<MenuState>(_stateManager));
+        _stateManager.pushState(std::make_unique<GameOverState>(_stateManager));
         return;
     }
 }
