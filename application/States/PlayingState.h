@@ -14,6 +14,8 @@ namespace application {
 class PlayingState : public State {
 public:
     explicit PlayingState(StateManager& stateManager);
+    explicit PlayingState(StateManager& stateManager, std::shared_ptr<logic::Score> score, int livesLeft,
+                          int currentLevel);
     void handleEvent(const sf::Event& event) override;
     void update() override;
     void render(sf::RenderWindow& window) override;
@@ -24,6 +26,8 @@ private:
     std::unique_ptr<logic::Camera> _camera;
     std::unique_ptr<logic::World> _world;
     std::shared_ptr<logic::Score> _score;
+    int _livesLeft = logic::GameConstants::STARTING_LIVES;
+    int _currentLevel = 1;
     bool _mapLoaded = false;
 };
 

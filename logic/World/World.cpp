@@ -63,6 +63,7 @@ void World::update(const float deltaTime) {
                 const float tileCenterY = getTileCenterY(tileY);
                 ghost->setPosition(tileCenterX, tileCenterY);
                 ghost->setIsFeared(false);
+                ghost->setActive(true);
                 _pacman->eatGhost();
             } else {
                 handlePacmanDeath();
@@ -75,7 +76,8 @@ void World::update(const float deltaTime) {
             coin->collect();
             _collectablesLeft--;
             if (_collectablesLeft <= 0) {
-                handleNextLevel();
+                notify(EventType::LevelCleared);
+                _isGameVictory = true;
             }
         }
     }
@@ -85,7 +87,8 @@ void World::update(const float deltaTime) {
             fruit->collect();
             _collectablesLeft--;
             if (_collectablesLeft <= 0) {
-                handleNextLevel();
+                notify(EventType::LevelCleared);
+                _isGameVictory = true;
             }
 
             fearGhosts();
@@ -93,7 +96,7 @@ void World::update(const float deltaTime) {
     }
 }
 
-void World::loadMap(const std::vector<std::string>& map) {
+void World::loadMap(const std::vector<std::string>& map, const int pacmanLives, const int currentLevel) {
     _walls.clear();
     if (map.empty())
         return;
@@ -122,6 +125,7 @@ void World::loadMap(const std::vector<std::string>& map) {
                 break;
             case '@':
                 _pacman = _factory.createPacman(x, y, _cell * 0.9f, _cell * 0.9f, c, r);
+                _pacman->setLives(pacmanLives);
                 break;
             case '.':
                 _coins.push_back(_factory.createCoin(x, y, _cell * 0.2f, _cell * 0.2f));
@@ -137,7 +141,6 @@ void World::loadMap(const std::vector<std::string>& map) {
                 ghost->setActive(false);
                 _ghosts.push_back(std::move(ghost));
                 _ghostDelayTimers.push_back(GameConstants::GHOST_1_DELAY);
-                _originalGhostDelayTimers.push_back(GameConstants::GHOST_1_DELAY);
             } break;
             case '2': {
                 std::unique_ptr<Ghost> ghost =
@@ -145,7 +148,6 @@ void World::loadMap(const std::vector<std::string>& map) {
                 ghost->setActive(false);
                 _ghosts.push_back(std::move(ghost));
                 _ghostDelayTimers.push_back(GameConstants::GHOST_2_DELAY);
-                _originalGhostDelayTimers.push_back(GameConstants::GHOST_2_DELAY);
             } break;
             case '3': {
                 std::unique_ptr<Ghost> ghost =
@@ -153,7 +155,6 @@ void World::loadMap(const std::vector<std::string>& map) {
                 ghost->setActive(false);
                 _ghosts.push_back(std::move(ghost));
                 _ghostDelayTimers.push_back(GameConstants::GHOST_3_DELAY);
-                _originalGhostDelayTimers.push_back(GameConstants::GHOST_3_DELAY);
             } break;
             case '4': {
                 std::unique_ptr<Ghost> ghost =
@@ -161,16 +162,22 @@ void World::loadMap(const std::vector<std::string>& map) {
                 ghost->setActive(false);
                 _ghosts.push_back(std::move(ghost));
                 _ghostDelayTimers.push_back(GameConstants::GHOST_4_DELAY);
-                _originalGhostDelayTimers.push_back(GameConstants::GHOST_4_DELAY);
             } break;
             default:
                 break;
             }
         }
     }
+
+    _currentLevel = currentLevel;
+    setSpeedsForLevel();
 }
 
+int World::getCurrentLevel() const { return _currentLevel; }
+
 bool World::getIsGameOver() const { return _isGameOver; }
+
+bool World::getIsGameVictory() const { return _isGameVictory; }
 
 const std::vector<std::unique_ptr<Wall>>& World::getWalls() const { return _walls; }
 
@@ -181,6 +188,19 @@ const std::vector<std::unique_ptr<Fruit>>& World::getFruits() const { return _fr
 const std::vector<std::unique_ptr<Ghost>>& World::getActiveGhosts() const { return _ghosts; }
 
 Pacman& World::getPacman() const { return *_pacman; }
+
+void World::setPacmanLives(const int lives) const {
+    if (_pacman) {
+        _pacman->setLives(lives);
+    }
+}
+
+int World::getPacmanLives() const {
+    if (_pacman) {
+        return _pacman->getLives();
+    }
+    return 0;
+}
 
 void World::handlePacmanMovement(const float deltaTime) const {
     if (!_pacman)
@@ -368,28 +388,7 @@ void World::handlePacmanDeath() {
     resetGhostsAndPacman();
 }
 
-void World::handleNextLevel() {
-    _currentLevel++;
-    notify(EventType::LevelCleared);
-
-    for (const auto& coin : _coins) {
-        coin->reset();
-    }
-    for (const auto& fruit : _fruits) {
-        fruit->reset();
-    }
-    _collectablesLeft = _coins.size() + _fruits.size();
-
-    resetGhostsAndPacman();
-
-    _allGhostsActive = false;
-    for (int i = 0; i < _originalGhostDelayTimers.size(); i++) {
-        if (i < _ghosts.size() && i < _ghostDelayTimers.size()) {
-            _ghosts[i]->setActive(false);
-            _ghostDelayTimers[i] = _originalGhostDelayTimers[i];
-        }
-    }
-
+void World::setSpeedsForLevel() {
     const float newGhostSpeed =
         std::min(GameConstants::BASE_GHOST_SPEED + (GameConstants::SPEED_INCREASE_PER_LEVEL * (_currentLevel - 1)),
                  GameConstants::MAX_GHOST_SPEED);
@@ -398,10 +397,7 @@ void World::handleNextLevel() {
                                                    (GameConstants::SPEED_INCREASE_PER_LEVEL * (_currentLevel - 1)),
                                                GameConstants::MAX_FEARED_GHOST_SPEED);
 
-    _ghostsAreFeared = false;
-    _fearedTimer = 0.0f;
     for (const auto& ghost : _ghosts) {
-        ghost->setIsFeared(false);
         ghost->setSpeeds(newGhostSpeed, newFearedGhostSpeed);
     }
 }

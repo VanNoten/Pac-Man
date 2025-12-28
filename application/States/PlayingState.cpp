@@ -3,6 +3,7 @@
 #include "GameOverState.h"
 #include "MenuState.h"
 #include "PausedState.h"
+#include "VictoryState.h"
 
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Font.hpp>
@@ -11,6 +12,7 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <Util/Stopwatch.h>
+#include <utility>
 
 namespace application {
 
@@ -18,7 +20,14 @@ PlayingState::PlayingState(StateManager& stateManager)
     : _stateManager(stateManager), _score(std::make_shared<logic::Score>()) {
     _sfmlFactory.setScoreObserver(_score);
     _world = std::make_unique<logic::World>(_sfmlFactory);
-};
+}
+
+PlayingState::PlayingState(StateManager& stateManager, std::shared_ptr<logic::Score> score, const int livesLeft,
+                           const int currentLevel)
+    : _stateManager(stateManager), _score(std::move(score)), _livesLeft(livesLeft), _currentLevel(currentLevel) {
+    _sfmlFactory.setScoreObserver(_score);
+    _world = std::make_unique<logic::World>(_sfmlFactory);
+}
 
 void PlayingState::handleEvent(const sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
@@ -51,7 +60,7 @@ void PlayingState::update() {
                                               "#.#..............#.#", "#.#.##.##..##.##.#.#", "#......#1234#......#",
                                               "#.#.##.######.##.#.#", "#.#..............#.#", "#.##.#.######.#.##.#",
                                               "#....#....@...#...F#", "####################"};
-        _world->loadMap(map);
+        _world->loadMap(map, _livesLeft, _currentLevel);
         _world->addObserver(_score);
         _mapLoaded = true;
     }
@@ -63,7 +72,11 @@ void PlayingState::update() {
 
     if (_world->getIsGameOver()) {
         _stateManager.pushState(std::make_unique<GameOverState>(_stateManager));
-        return;
+    }
+
+    if (_world->getIsGameVictory()) {
+        int livesLeft = _world->getPacmanLives();
+        _stateManager.pushState(std::make_unique<VictoryState>(_stateManager, _score, livesLeft, _currentLevel));
     }
 }
 
@@ -181,6 +194,14 @@ void PlayingState::render(sf::RenderWindow& window) {
     livesText.setFillColor(sf::Color::White);
     livesText.setPosition(0, 60);
     window.draw(livesText);
+
+    sf::Text levelText;
+    levelText.setFont(arial);
+    levelText.setString("Level: " + std::to_string(_world->getCurrentLevel()));
+    levelText.setCharacterSize(24);
+    levelText.setFillColor(sf::Color::White);
+    levelText.setPosition(0, 90);
+    window.draw(levelText);
 }
 
 } // namespace application

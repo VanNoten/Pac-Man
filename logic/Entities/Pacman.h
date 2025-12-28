@@ -28,7 +28,8 @@ public:
     void eatGhost() const;
 
     void die();
-    int getLives() const;
+    void setLives(int lives);
+    [[nodiscard]] int getLives() const;
 
 private:
     Direction _direction = Direction::RIGHT;

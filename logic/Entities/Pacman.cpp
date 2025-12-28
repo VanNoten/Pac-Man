@@ -35,6 +35,8 @@ void Pacman::eatGhost() const { notify(EventType::GhostEaten); }
 
 void Pacman::die() { _livesLeft -= 1; }
 
+void Pacman::setLives(const int lives) { _livesLeft = lives; }
+
 int Pacman::getLives() const { return _livesLeft; }
 
 } // namespace logic

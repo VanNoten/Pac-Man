@@ -1,21 +1,26 @@
 #include "VictoryState.h"
 
 #include "MenuState.h"
+#include "PlayingState.h"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Event.hpp>
+#include <utility>
 
 namespace application {
 
-VictoryState::VictoryState(StateManager& stateManager) : _stateManager(stateManager) {}
+VictoryState::VictoryState(StateManager& stateManager, std::shared_ptr<logic::Score> score, const int livesLeft,
+                           const int currentLevel)
+    : _stateManager(stateManager), _score(std::move(score)), _livesLeft(livesLeft), _currentLevel(currentLevel) {}
 
 void VictoryState::handleEvent(const sf::Event& event) {
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-        sf::Vector2i mousePos = {event.mouseButton.x, event.mouseButton.y};
+        const sf::Vector2i mousePos = {event.mouseButton.x, event.mouseButton.y};
 
         if (_nextLevelButtonBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-            _stateManager.popState();
+            _stateManager.changeState(
+                std::make_unique<PlayingState>(_stateManager, _score, _livesLeft, _currentLevel + 1));
         }
 
         if (_mainMenuButtonBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {

@@ -21,13 +21,18 @@ public:
 
     void handleAction(Actions action) const;
     void update(float deltaTime);
-    void loadMap(const std::vector<std::string>& map);
+    void loadMap(const std::vector<std::string>& map, int pacmanLives = GameConstants::STARTING_LIVES,
+                 int currentLevel = 1);
+    [[nodiscard]] int getCurrentLevel() const;
     [[nodiscard]] bool getIsGameOver() const;
+    [[nodiscard]] bool getIsGameVictory() const;
     [[nodiscard]] const std::vector<std::unique_ptr<Wall>>& getWalls() const;
     [[nodiscard]] const std::vector<std::unique_ptr<Coin>>& getCoins() const;
     [[nodiscard]] const std::vector<std::unique_ptr<Fruit>>& getFruits() const;
     [[nodiscard]] const std::vector<std::unique_ptr<Ghost>>& getActiveGhosts() const;
     [[nodiscard]] Pacman& getPacman() const;
+    void setPacmanLives(int lives) const;
+    [[nodiscard]] int getPacmanLives() const;
 
 private:
     void handlePacmanMovement(float deltaTime) const;
@@ -35,7 +40,7 @@ private:
     void activateGhosts(float deltaTime);
     void fearGhosts();
     void handlePacmanDeath();
-    void handleNextLevel();
+    void setSpeedsForLevel();
     void resetGhostsAndPacman();
     [[nodiscard]] static bool isColliding(const Bounds& A, const Bounds& B);
     [[nodiscard]] float getTileCenterX(int tileX) const;
@@ -64,10 +69,10 @@ private:
     bool _ghostsAreFeared = false;
 
     std::vector<float> _ghostDelayTimers = {};
-    std::vector<float> _originalGhostDelayTimers = {};
     bool _allGhostsActive = false;
 
     bool _isGameOver = false;
+    bool _isGameVictory = false;
 
     int _collectablesLeft = 0;
 
