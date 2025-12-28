@@ -5,6 +5,7 @@
 #include "PausedState.h"
 #include "VictoryState.h"
 
+#include <Camera/Camera.h>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -82,7 +83,7 @@ void PlayingState::update() {
 
 void PlayingState::render(sf::RenderWindow& window) {
     if (!_camera) {
-        _camera = std::make_unique<logic::Camera>(window.getSize().x, window.getSize().y);
+        _camera = std::make_unique<Camera>(window.getSize().x, window.getSize().y);
     }
 
     for (const auto& wall : _world->getWalls()) {

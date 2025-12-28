@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-namespace logic {
+namespace application {
 
 Camera::Camera(const float windowWidth, const float windowHeight)
     : _windowWidth(windowWidth), _windowHeight(windowHeight) {
@@ -26,4 +26,4 @@ void Camera::setWindowSize(const float width, const float height) {
     _offsetY = (height - 2.0f * _scale) / 2.0f;
 }
 
-} // namespace logic
+} // namespace application

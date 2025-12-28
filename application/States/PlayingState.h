@@ -3,9 +3,8 @@
 
 #include "State.h"
 #include "StateManager.h"
-#include "Util/Camera.h"
 #include "World/World.h"
-
+#include <Camera/Camera.h>
 #include <SFMLFactory/SFMLFactory.h>
 #include <Score/Score.h>
 
@@ -23,7 +22,7 @@ public:
 private:
     StateManager& _stateManager;
     SFMLFactory _sfmlFactory;
-    std::unique_ptr<logic::Camera> _camera;
+    std::unique_ptr<Camera> _camera;
     std::unique_ptr<logic::World> _world;
     std::shared_ptr<logic::Score> _score;
     int _livesLeft = logic::GameConstants::STARTING_LIVES;

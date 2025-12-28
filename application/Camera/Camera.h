@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-namespace logic {
+namespace application {
 
 class Camera {
 public:
@@ -18,6 +18,6 @@ private:
     float _offsetY;
 };
 
-} // namespace logic
+} // namespace application
 
 #endif // CAMERA_H
