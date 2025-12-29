@@ -2,6 +2,7 @@
 
 #include "MenuState.h"
 
+#include <Resources/ResourceLoader.h>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Event.hpp>
@@ -31,8 +32,7 @@ void PausedState::handleEvent(const sf::Event& event) {
 void PausedState::update() {}
 
 void PausedState::render(sf::RenderWindow& window) {
-    sf::Font arial;
-    arial.loadFromFile("C:\\Windows\\Fonts\\Arial.ttf");
+    sf::Font font = ResourceLoader::getInstance()->getFont();
 
     sf::RectangleShape backgroundRect({static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y)});
     backgroundRect.setFillColor(sf::Color({0, 0, 0, 230}));
@@ -43,7 +43,7 @@ void PausedState::render(sf::RenderWindow& window) {
     float centerY = window.getSize().y / 2.0f;
 
     sf::Text tempText;
-    tempText.setFont(arial);
+    tempText.setFont(font);
     tempText.setString("Resume Game");
     tempText.setCharacterSize(36);
     float buttonWidth = tempText.getLocalBounds().width * 1.6f;
@@ -54,7 +54,7 @@ void PausedState::render(sf::RenderWindow& window) {
     float yPosition = centerY - totalHeight / 2.0f;
 
     sf::Text resumeText;
-    resumeText.setFont(arial);
+    resumeText.setFont(font);
     resumeText.setString("Resume Game");
     resumeText.setCharacterSize(36);
     resumeText.setFillColor(sf::Color::White);
@@ -76,7 +76,7 @@ void PausedState::render(sf::RenderWindow& window) {
     yPosition += buttonHeight + buttonSpacing;
 
     sf::Text mainMenuText;
-    mainMenuText.setFont(arial);
+    mainMenuText.setFont(font);
     mainMenuText.setString("Main Menu");
     mainMenuText.setCharacterSize(36);
     mainMenuText.setFillColor(sf::Color::White);

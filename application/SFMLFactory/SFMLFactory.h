@@ -2,11 +2,14 @@
 #define SFMLFACTORY_H
 
 #include <AbstractFactory/AbstractFactory.h>
+#include <Views/EntityView.h>
 
 namespace application {
 
 class SFMLFactory : public logic::AbstractFactory {
 public:
+    [[nodiscard]] std::vector<std::shared_ptr<EntityView>> getViews() const;
+
     void setScoreObserver(const std::shared_ptr<logic::Observer>& observer);
 
     std::unique_ptr<logic::Pacman> createPacman(float x, float y, float width, float height, int spawnTileX,
@@ -18,6 +21,8 @@ public:
                                               int spawnTileY, logic::GhostType ghostType) override;
 
 private:
+    std::vector<std::shared_ptr<EntityView>> _views;
+
     std::shared_ptr<logic::Observer> _scoreObserver;
 };
 

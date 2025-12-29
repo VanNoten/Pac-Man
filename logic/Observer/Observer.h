@@ -8,7 +8,7 @@ enum class EventType { Move, CoinCollected, FruitCollected, GhostEaten, GameOver
 class Observer {
 public:
     virtual ~Observer() = default;
-    virtual void update(EventType event) = 0;
+    virtual void onNotify(EventType event) = 0;
 };
 
 } // namespace logic

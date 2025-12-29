@@ -9,7 +9,7 @@ namespace logic {
 
 Score::Score() { loadHighscores(); }
 
-void Score::update(EventType event) {
+void Score::onNotify(EventType event) {
     if (event == EventType::CoinCollected) {
         const double timeWindow =
             _timeSinceLastIncrement < GameConstants::MAX_MULTIPLIER_TIME && _timeSinceLastIncrement > 0.0

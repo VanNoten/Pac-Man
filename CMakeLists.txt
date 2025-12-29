@@ -43,3 +43,8 @@ target_link_libraries(pacman_app
         sfml-window
         sfml-graphics
 )
+
+add_custom_target(copy_assets
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/application/Resources/Assets ${PROJECT_BINARY_DIR}/Assets
+)
+add_dependencies(pacman_app copy_assets)

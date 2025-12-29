@@ -3,6 +3,7 @@
 #include "MenuState.h"
 #include "PlayingState.h"
 
+#include <Resources/ResourceLoader.h>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Event.hpp>
@@ -29,8 +30,7 @@ void GameOverState::handleEvent(const sf::Event& event) {
 void GameOverState::update() {}
 
 void GameOverState::render(sf::RenderWindow& window) {
-    sf::Font arial;
-    arial.loadFromFile("C:\\Windows\\Fonts\\Arial.ttf");
+    sf::Font font = ResourceLoader::getInstance()->getFont();
 
     sf::RectangleShape backgroundRect({static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y)});
     backgroundRect.setFillColor(sf::Color({0, 0, 0, 230}));
@@ -41,7 +41,7 @@ void GameOverState::render(sf::RenderWindow& window) {
     float centerY = window.getSize().y / 2.0f;
 
     sf::Text gameOverText;
-    gameOverText.setFont(arial);
+    gameOverText.setFont(font);
     gameOverText.setString("Game Over");
     gameOverText.setCharacterSize(72);
     gameOverText.setFillColor(sf::Color::Yellow);
@@ -49,7 +49,7 @@ void GameOverState::render(sf::RenderWindow& window) {
     window.draw(gameOverText);
 
     sf::Text tempText;
-    tempText.setFont(arial);
+    tempText.setFont(font);
     tempText.setString("Restart Game");
     tempText.setCharacterSize(36);
     float buttonWidth = tempText.getLocalBounds().width * 1.6f;
@@ -60,7 +60,7 @@ void GameOverState::render(sf::RenderWindow& window) {
     float yPosition = centerY - totalHeight / 2.0f;
 
     sf::Text restartText;
-    restartText.setFont(arial);
+    restartText.setFont(font);
     restartText.setString("Restart Game");
     restartText.setCharacterSize(36);
     restartText.setFillColor(sf::Color::White);
@@ -82,7 +82,7 @@ void GameOverState::render(sf::RenderWindow& window) {
     yPosition += buttonHeight + buttonSpacing;
 
     sf::Text mainMenuText;
-    mainMenuText.setFont(arial);
+    mainMenuText.setFont(font);
     mainMenuText.setString("Main Menu");
     mainMenuText.setCharacterSize(36);
     mainMenuText.setFillColor(sf::Color::White);

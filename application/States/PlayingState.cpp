@@ -6,6 +6,7 @@
 #include "VictoryState.h"
 
 #include <Camera/Camera.h>
+#include <Resources/ResourceLoader.h>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -86,102 +87,21 @@ void PlayingState::render(sf::RenderWindow& window) {
         _camera = std::make_unique<Camera>(window.getSize().x, window.getSize().y);
     }
 
-    for (const auto& wall : _world->getWalls()) {
-        float screenX;
-        float screenY;
-        _camera->worldToScreen(wall->getX(), wall->getY(), screenX, screenY);
-        float width = _camera->worldToScreenSize(wall->getWidth());
-        float height = _camera->worldToScreenSize(wall->getHeight());
-
-        sf::RectangleShape rect({width, height});
-        rect.setPosition(screenX - width * 0.5f, screenY - height * 0.5f);
-        rect.setFillColor(sf::Color(0, 0, 255));
-        window.draw(rect);
+    for (const auto& view : _sfmlFactory.getViews()) {
+        view->draw(window, *_camera);
     }
-
-    for (const auto& coin : _world->getCoins()) {
-        if (coin->isCollected())
-            continue;
-
-        float screenX;
-        float screenY;
-        _camera->worldToScreen(coin->getX(), coin->getY(), screenX, screenY);
-        float radius = _camera->worldToScreenSize(coin->getWidth() * 0.5f);
-
-        sf::CircleShape circle(radius);
-        circle.setPosition(screenX - radius, screenY - radius);
-        circle.setFillColor(sf::Color::White);
-        window.draw(circle);
-    }
-
-    for (const auto& fruit : _world->getFruits()) {
-        if (fruit->isCollected())
-            continue;
-
-        float screenX;
-        float screenY;
-        _camera->worldToScreen(fruit->getX(), fruit->getY(), screenX, screenY);
-        float radius = _camera->worldToScreenSize(fruit->getWidth() * 0.5f);
-
-        sf::CircleShape circle(radius);
-        circle.setPosition(screenX - radius, screenY - radius);
-        circle.setFillColor(sf::Color::Red);
-        window.draw(circle);
-    }
-
-    for (const auto& ghost : _world->getActiveGhosts()) {
-        float screenX;
-        float screenY;
-        _camera->worldToScreen(ghost->getX(), ghost->getY(), screenX, screenY);
-        float radius = _camera->worldToScreenSize(ghost->getWidth() * 0.5f);
-
-        sf::CircleShape circle(radius);
-        circle.setPosition(screenX - radius, screenY - radius);
-
-        if (!ghost->getIsFeared()) {
-            switch (ghost->getGhostType()) {
-            case logic::GhostType::Locked:
-                circle.setFillColor(sf::Color::Red);
-                break;
-            case logic::GhostType::AheadChaser:
-                circle.setFillColor(sf::Color::Magenta);
-                break;
-            case logic::GhostType::Chaser:
-                circle.setFillColor(sf::Color::Yellow);
-                break;
-            default:
-                break;
-            }
-        } else {
-            circle.setFillColor(sf::Color::Green);
-        }
-
-        window.draw(circle);
-    }
-
-    const auto& pacman = _world->getPacman();
-    float screenX;
-    float screenY;
-    _camera->worldToScreen(pacman.getX(), pacman.getY(), screenX, screenY);
-    float radius = _camera->worldToScreenSize(pacman.getWidth() * 0.5f);
-
-    sf::CircleShape circle(radius);
-    circle.setPosition(screenX - radius, screenY - radius);
-    circle.setFillColor(sf::Color::Yellow);
-    window.draw(circle);
 
     std::string posString =
         std::to_string(_world->getPacman().getX()) + ", " + std::to_string(_world->getPacman().getY());
-    sf::Font arial;
-    arial.loadFromFile("C:\\Windows\\Fonts\\Arial.ttf");
+    sf::Font font = ResourceLoader::getInstance()->getFont();
     sf::Text pos;
-    pos.setFont(arial);
+    pos.setFont(font);
     pos.setFillColor(sf::Color::Green);
     pos.setString(posString);
     window.draw(pos);
 
     sf::Text scoreText;
-    scoreText.setFont(arial);
+    scoreText.setFont(font);
     scoreText.setString("Score: " + std::to_string(_score->getCurrentScore()));
     scoreText.setCharacterSize(24);
     scoreText.setFillColor(sf::Color::White);
@@ -189,7 +109,7 @@ void PlayingState::render(sf::RenderWindow& window) {
     window.draw(scoreText);
 
     sf::Text livesText;
-    livesText.setFont(arial);
+    livesText.setFont(font);
     livesText.setString("Lives: " + std::to_string(_world->getPacman().getLives()));
     livesText.setCharacterSize(24);
     livesText.setFillColor(sf::Color::White);
@@ -197,7 +117,7 @@ void PlayingState::render(sf::RenderWindow& window) {
     window.draw(livesText);
 
     sf::Text levelText;
-    levelText.setFont(arial);
+    levelText.setFont(font);
     levelText.setString("Level: " + std::to_string(_world->getCurrentLevel()));
     levelText.setCharacterSize(24);
     levelText.setFillColor(sf::Color::White);

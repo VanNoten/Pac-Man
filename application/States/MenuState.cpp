@@ -1,6 +1,7 @@
 #include "MenuState.h"
 #include "PlayingState.h"
 
+#include <Resources/ResourceLoader.h>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -24,8 +25,7 @@ void MenuState::handleEvent(const sf::Event& event) {
 void MenuState::update() {}
 
 void MenuState::render(sf::RenderWindow& window) {
-    sf::Font arial;
-    arial.loadFromFile("C:\\Windows\\Fonts\\Arial.ttf");
+    sf::Font font = ResourceLoader::getInstance()->getFont();
 
     std::vector<int> scores = _score->getHighscores();
 
@@ -33,7 +33,7 @@ void MenuState::render(sf::RenderWindow& window) {
     float yPosition = 20.0f;
 
     sf::Text titleText;
-    titleText.setFont(arial);
+    titleText.setFont(font);
     titleText.setString("Pac-Man");
     titleText.setCharacterSize(64);
     titleText.setFillColor(sf::Color::Yellow);
@@ -42,7 +42,7 @@ void MenuState::render(sf::RenderWindow& window) {
     yPosition += 140.0f;
 
     sf::Text scoresTitle;
-    scoresTitle.setFont(arial);
+    scoresTitle.setFont(font);
     scoresTitle.setString("Previous High Scores");
     scoresTitle.setCharacterSize(24);
     scoresTitle.setFillColor(sf::Color::White);
@@ -52,7 +52,7 @@ void MenuState::render(sf::RenderWindow& window) {
 
     if (scores.empty()) {
         sf::Text noScoresText;
-        noScoresText.setFont(arial);
+        noScoresText.setFont(font);
         noScoresText.setString("No scores yet");
         noScoresText.setCharacterSize(18);
         noScoresText.setFillColor(sf::Color::White);
@@ -61,7 +61,7 @@ void MenuState::render(sf::RenderWindow& window) {
     } else {
         for (int i = 0; i < scores.size(); i++) {
             sf::Text scoreText;
-            scoreText.setFont(arial);
+            scoreText.setFont(font);
             scoreText.setString(std::to_string(i + 1) + ". " + std::to_string(scores[i]));
             scoreText.setCharacterSize(18);
             scoreText.setFillColor(sf::Color::White);
@@ -74,7 +74,7 @@ void MenuState::render(sf::RenderWindow& window) {
 
     yPosition += 60.0f;
     sf::Text playText;
-    playText.setFont(arial);
+    playText.setFont(font);
     playText.setString("Play");
     playText.setCharacterSize(36);
     playText.setFillColor(sf::Color::White);

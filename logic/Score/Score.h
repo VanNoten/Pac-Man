@@ -11,7 +11,7 @@ static constexpr std::string HIGHSCORES_FILE = "highscores.txt";
 class Score : public Observer {
 public:
     Score();
-    void update(EventType event) override;
+    void onNotify(EventType event) override;
     void updateTick(float deltaTime);
     [[nodiscard]] int getCurrentScore() const;
     [[nodiscard]] std::vector<int> getHighscores() const;

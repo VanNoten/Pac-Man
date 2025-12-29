@@ -6,7 +6,7 @@ void Subject::addObserver(const std::shared_ptr<Observer>& observer) { _observer
 
 void Subject::notify(const EventType event) const {
     for (const auto& observer : _observers) {
-        observer->update(event);
+        observer->onNotify(event);
     }
 }
 
