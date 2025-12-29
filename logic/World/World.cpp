@@ -369,6 +369,7 @@ void World::fearGhosts() {
             std::pair<int, int> reverseTile = getTileInDirection(ghostTileX, ghostTileY, reverseDirection);
             if (!isWallAtTile(reverseTile.first, reverseTile.second)) {
                 ghost->setDirection(reverseDirection);
+                ghost->setLastDecisionTile(-1, -1); // force wall collision check after reversal
             }
         }
 
