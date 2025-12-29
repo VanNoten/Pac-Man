@@ -29,4 +29,6 @@ void CoinView::draw(sf::RenderWindow& window, const Camera& camera, float deltaT
     window.draw(_sprite);
 }
 
+int CoinView::getZLevel() const { return _zLevel; }
+
 } // namespace application

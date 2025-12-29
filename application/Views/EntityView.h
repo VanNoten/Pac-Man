@@ -11,6 +11,7 @@ class EntityView : public logic::Observer {
 public:
     virtual ~EntityView() = default;
     virtual void draw(sf::RenderWindow& window, const Camera& camera, float deltaTime) = 0;
+    [[nodiscard]] virtual int getZLevel() const = 0;
 };
 
 } // namespace application

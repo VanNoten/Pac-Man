@@ -64,6 +64,14 @@ void PlayingState::update() {
                                               "#....#....@...#...F#", "####################"};
         _world->loadMap(map, _livesLeft, _currentLevel);
         _world->addObserver(_score);
+
+        _views = _sfmlFactory.getViews();
+        // sort the views based off of z-level (so lower z-levels get rendered first) using lambda comparator
+        std::sort(_views.begin(), _views.end(),
+                  [](const std::shared_ptr<EntityView>& a, const std::shared_ptr<EntityView>& b) {
+                      return a->getZLevel() < b->getZLevel();
+                  });
+
         _mapLoaded = true;
     }
 
@@ -87,7 +95,7 @@ void PlayingState::render(sf::RenderWindow& window) {
         _camera = std::make_unique<Camera>(window.getSize().x, window.getSize().y);
     }
 
-    for (const auto& view : _sfmlFactory.getViews()) {
+    for (const auto& view : _views) {
         view->draw(window, *_camera, _deltaTime);
     }
 

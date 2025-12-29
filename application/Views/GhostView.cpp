@@ -33,6 +33,8 @@ void GhostView::draw(sf::RenderWindow& window, const Camera& camera, const float
     window.draw(_sprite);
 }
 
+int GhostView::getZLevel() const { return _zLevel; }
+
 sf::IntRect GhostView::getSpriteRect() const {
     if (_model.getIsFeared()) {
         const int y = Y_OFFSET_FEARED + _currentFrame * (SPRITE_SIZE + PIXELS_BETWEEN);

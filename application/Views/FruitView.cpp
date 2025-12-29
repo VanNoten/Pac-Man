@@ -29,4 +29,6 @@ void FruitView::draw(sf::RenderWindow& window, const Camera& camera, float delta
     window.draw(_sprite);
 }
 
+int FruitView::getZLevel() const { return _zLevel; }
+
 } // namespace application

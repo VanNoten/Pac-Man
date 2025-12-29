@@ -34,6 +34,8 @@ void PacmanView::draw(sf::RenderWindow& window, const Camera& camera, const floa
     window.draw(_sprite);
 }
 
+int PacmanView::getZLevel() const { return _zLevel; }
+
 sf::IntRect PacmanView::getSpriteRect() const {
     const Direction direction = _model.getDirection();
     int x = X_OFFSET;

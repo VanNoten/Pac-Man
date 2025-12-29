@@ -21,4 +21,6 @@ void WallView::draw(sf::RenderWindow& window, const Camera& camera, float deltaT
     window.draw(rect);
 }
 
+int WallView::getZLevel() const { return _zLevel; }
+
 } // namespace application

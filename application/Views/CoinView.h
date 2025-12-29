@@ -13,6 +13,7 @@ public:
     ~CoinView() override = default;
     void onNotify(logic::EventType event) override;
     void draw(sf::RenderWindow& window, const Camera& camera, float deltaTime) override;
+    [[nodiscard]] int getZLevel() const override;
 
 private:
     const logic::Coin& _model;
@@ -23,6 +24,8 @@ private:
     static constexpr int Y_OFFSET = 313;   // y offset pixels on spritesheet
 
     sf::IntRect _spriteRect = {X_OFFSET, Y_OFFSET, SPRITE_SIZE, SPRITE_SIZE};
+
+    const int _zLevel = 0; // used for rendering order of entities
 };
 
 } // namespace application

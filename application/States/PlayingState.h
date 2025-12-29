@@ -22,6 +22,7 @@ public:
 private:
     StateManager& _stateManager;
     SFMLFactory _sfmlFactory;
+    std::vector<std::shared_ptr<EntityView>> _views;
     std::unique_ptr<Camera> _camera;
     std::unique_ptr<logic::World> _world;
     std::shared_ptr<logic::Score> _score;
