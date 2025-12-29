@@ -1,3 +1,8 @@
+/**
+ * @file Structs.h
+ * @brief Contains Direction enum and Bounds struct
+ */
+
 #ifndef STRUCTS_H
 #define STRUCTS_H
 

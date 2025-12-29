@@ -33,10 +33,12 @@ PlayingState::PlayingState(StateManager& stateManager, std::shared_ptr<logic::Sc
 
 void PlayingState::handleEvent(const sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
+        // Pause game
         if (event.key.code == sf::Keyboard::Escape) {
             _stateManager.pushState(std::make_unique<PausedState>(_stateManager));
         }
 
+        // Translate keyboard input to world actions
         switch (event.key.code) {
         case sf::Keyboard::Up:
             _world->handleAction(logic::Actions::Up);
@@ -57,9 +59,10 @@ void PlayingState::handleEvent(const sf::Event& event) {
 }
 
 void PlayingState::update() {
+    // Load map if it hasn't been loaded yet
     if (!_mapLoaded) {
         const std::vector<std::string> map = {"####################", "#F...#........#....#", "#.##.#.######.#.##.#",
-                                              "#.#..............#.#", "#.#.##.##..##.##.#.#", "#......#1234#......#",
+                                              "#.#..............#.#", "#.#.##.##  ##.##.#.#", "#......#1234#......#",
                                               "#.#.##.######.##.#.#", "#.#..............#.#", "#.##.#.######.#.##.#",
                                               "#....#....@...#...F#", "####################"};
         _world->loadMap(map, _livesLeft, _currentLevel);
@@ -75,11 +78,12 @@ void PlayingState::update() {
         _mapLoaded = true;
     }
 
-    _deltaTime = static_cast<float>(logic::Stopwatch::getInstance()->getDeltaTime());
+    _deltaTime = static_cast<float>(logic::Stopwatch::getInstance().getDeltaTime());
 
     _world->update(_deltaTime);
     _score->updateTick(_deltaTime);
 
+    // Determine if state transition is needed
     if (_world->getIsGameOver()) {
         _stateManager.pushState(std::make_unique<GameOverState>(_stateManager));
     }
@@ -95,13 +99,14 @@ void PlayingState::render(sf::RenderWindow& window) {
         _camera = std::make_unique<Camera>(window.getSize().x, window.getSize().y);
     }
 
+    // Render all entity views
     for (const auto& view : _views) {
         view->draw(window, *_camera, _deltaTime);
     }
 
     std::string posString =
         std::to_string(_world->getPacman().getX()) + ", " + std::to_string(_world->getPacman().getY());
-    sf::Font font = ResourceLoader::getInstance()->getFont();
+    sf::Font font = ResourceLoader::getInstance().getFont();
     sf::Text pos;
     pos.setFont(font);
     pos.setFillColor(sf::Color::Green);

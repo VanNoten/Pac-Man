@@ -2,13 +2,9 @@
 
 namespace logic {
 
-Random* Random::_instance = nullptr;
-
-Random* Random::getInstance() {
-    if (!_instance) {
-        _instance = new Random();
-    }
-    return _instance;
+Random& Random::getInstance() {
+    static Random instance;
+    return instance;
 }
 
 double Random::randomDouble() {

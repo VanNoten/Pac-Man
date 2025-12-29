@@ -6,6 +6,11 @@
 
 namespace application {
 
+/**
+ * @brief Renders Wall entities as blue rectangles
+ *
+ * Concrete implementation of EntityView for Wall entity
+ */
 class WallView : public EntityView {
 public:
     explicit WallView(const logic::Wall& wall);

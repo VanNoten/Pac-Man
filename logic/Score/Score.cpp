@@ -25,10 +25,12 @@ void Score::onNotify(EventType event) {
 
     if (event == EventType::FruitCollected) {
         _currentScore += GameConstants::FRUIT_VALUE;
+        _timeSinceLastIncrement = 0.0;
     }
 
     if (event == EventType::GhostEaten) {
         _currentScore += GameConstants::GHOST_VALUE;
+        _timeSinceLastIncrement = 0.0;
     }
 
     if (event == EventType::GameOver) {
@@ -37,10 +39,12 @@ void Score::onNotify(EventType event) {
 
     if (event == EventType::LevelCleared) {
         _currentScore += GameConstants::LEVEL_CLEAR_VALUE;
+        _timeSinceLastIncrement = 0.0;
     }
 }
 
 void Score::updateTick(float deltaTime) {
+    // Accumulate deltaTime until enough time has passed to decrease the score
     _accumulatedDecrease += GameConstants::SCORE_DECREASE_RATE * deltaTime;
 
     if (_accumulatedDecrease >= 1.0) {
@@ -61,15 +65,18 @@ int Score::getCurrentScore() const { return _currentScore; }
 std::vector<int> Score::getHighscores() const { return _highscores; }
 
 void Score::saveScore() const {
+    // Get all current high scores and sort in descending order
     std::vector<int> scores = _highscores;
     scores.push_back(_currentScore);
     std::sort(scores.rbegin(), scores.rend());
 
+    // Take the top 5 high scores
     if (scores.size() > 5) {
         scores.resize(5);
     }
 
-    std::ofstream file(HIGHSCORES_FILE);
+    // Save new high scores to file
+    std::ofstream file(GameConstants::HIGHSCORES_FILE);
     if (file.is_open()) {
         for (const int score : scores) {
             file << score << "\n";
@@ -79,8 +86,9 @@ void Score::saveScore() const {
 }
 
 void Score::loadHighscores() {
+    // Get all current high scores and sort in descending order
     std::vector<int> scores;
-    std::ifstream file(HIGHSCORES_FILE);
+    std::ifstream file(GameConstants::HIGHSCORES_FILE);
 
     if (file.is_open()) {
         int score;
@@ -92,6 +100,7 @@ void Score::loadHighscores() {
 
     std::sort(scores.rbegin(), scores.rend());
 
+    // Take the top 5 high scores
     if (scores.size() > 5) {
         scores.resize(5);
     }

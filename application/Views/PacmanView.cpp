@@ -7,7 +7,7 @@
 namespace application {
 
 PacmanView::PacmanView(const logic::Pacman& pacman) : _model(pacman) {
-    const sf::Texture& texture = ResourceLoader::getInstance()->getSpriteSheet();
+    const sf::Texture& texture = ResourceLoader::getInstance().getSpriteSheet();
     _sprite.setTexture(texture);
 }
 

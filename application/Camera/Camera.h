@@ -8,7 +8,6 @@ public:
     Camera(float windowWidth, float windowHeight);
     void worldToScreen(float worldX, float worldY, float& screenX, float& screenY) const;
     [[nodiscard]] float worldToScreenSize(float worldSize) const;
-    void setWindowSize(float width, float height);
 
 private:
     float _windowWidth;

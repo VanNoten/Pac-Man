@@ -8,6 +8,12 @@
 
 namespace application {
 
+/**
+ * @brief Menu state showing title of the game, previous high scores and a play button
+ *
+ * Previous high scores are limited to the top 5
+ * Pressing the play button or pressing enter on the keyboard transitions to PlayingState
+ */
 class MenuState : public State {
 public:
     explicit MenuState(StateManager& stateManager);
@@ -18,7 +24,8 @@ public:
 private:
     StateManager& _stateManager;
     std::shared_ptr<logic::Score> _score;
-    sf::FloatRect _playButtonBounds;
+    std::vector<int> _highScores = {};
+    sf::FloatRect _playButtonBounds; // Bounds for the play button to check if player clicked on it
 };
 
 } // namespace application

@@ -13,18 +13,19 @@ PausedState::PausedState(StateManager& stateManager) : _stateManager(stateManage
 
 void PausedState::handleEvent(const sf::Event& event) {
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
-        _stateManager.popState();
+        _stateManager.popState(); // Continue playing
     }
 
+    // Check if mouse button was pressed inside any of the buttons
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         sf::Vector2i mousePos = {event.mouseButton.x, event.mouseButton.y};
 
         if (_resumeButtonBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-            _stateManager.popState();
+            _stateManager.popState(); // Continue playing
         }
 
         if (_mainMenuButtonBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-            _stateManager.changeState(std::make_unique<MenuState>(_stateManager));
+            _stateManager.changeState(std::make_unique<MenuState>(_stateManager)); // Return to main menu
         }
     }
 }
@@ -32,7 +33,7 @@ void PausedState::handleEvent(const sf::Event& event) {
 void PausedState::update() {}
 
 void PausedState::render(sf::RenderWindow& window) {
-    sf::Font font = ResourceLoader::getInstance()->getFont();
+    sf::Font font = ResourceLoader::getInstance().getFont();
 
     sf::RectangleShape backgroundRect({static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y)});
     backgroundRect.setFillColor(sf::Color({0, 0, 0, 230}));
@@ -65,6 +66,7 @@ void PausedState::render(sf::RenderWindow& window) {
 
     _resumeButtonBounds = resumeRect.getGlobalBounds();
 
+    // Center the text inside the button rectangle
     sf::FloatRect textBounds = resumeText.getLocalBounds();
     resumeText.setPosition(
         resumeRect.getPosition().x + resumeRect.getSize().x / 2.0f - (textBounds.left + textBounds.width / 2.0f),
@@ -87,6 +89,7 @@ void PausedState::render(sf::RenderWindow& window) {
 
     _mainMenuButtonBounds = mainMenuRect.getGlobalBounds();
 
+    // Center the text inside the button rectangle
     sf::FloatRect mainMenuTextBounds = mainMenuText.getLocalBounds();
     mainMenuText.setPosition(mainMenuRect.getPosition().x + mainMenuRect.getSize().x / 2.0f -
                                  (mainMenuTextBounds.left + mainMenuTextBounds.width / 2.0f),

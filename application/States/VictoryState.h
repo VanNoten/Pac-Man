@@ -8,8 +8,14 @@
 
 namespace application {
 
+/**
+ * @brief Victory state showing a button to continue to next level and a button to return to MenuState
+ */
 class VictoryState : public State {
 public:
+    /**
+     * @brief Constructor needs some information about the game state to continue to next level
+     */
     explicit VictoryState(StateManager& stateManager, std::shared_ptr<logic::Score> score, int livesLeft,
                           int currentLevel);
     void handleEvent(const sf::Event& event) override;
@@ -18,9 +24,9 @@ public:
 
 private:
     StateManager& _stateManager;
-    std::shared_ptr<logic::Score> _score;
-    int _livesLeft = logic::GameConstants::STARTING_LIVES;
-    int _currentLevel = 1;
+    std::shared_ptr<logic::Score> _score;                  // Score that will be forwarded to the new PlayingState
+    int _livesLeft = logic::GameConstants::STARTING_LIVES; // Lives left that will be forwarded to the new PlayingState
+    int _currentLevel = 1; // Current level that will be forwarded to the new PlayingState
     sf::FloatRect _nextLevelButtonBounds;
     sf::FloatRect _mainMenuButtonBounds;
 };

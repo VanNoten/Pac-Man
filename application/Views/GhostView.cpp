@@ -6,7 +6,7 @@
 namespace application {
 
 GhostView::GhostView(const logic::Ghost& ghost) : _model(ghost) {
-    const sf::Texture& texture = ResourceLoader::getInstance()->getSpriteSheet();
+    const sf::Texture& texture = ResourceLoader::getInstance().getSpriteSheet();
     _sprite.setTexture(texture);
 }
 
@@ -17,7 +17,8 @@ void GhostView::draw(sf::RenderWindow& window, const Camera& camera, const float
 
     if (_animationTimer >= ANIMATION_SPEED) {
         _animationTimer = 0.0f;
-        _currentFrame = (_currentFrame + 1) % 2;
+        _currentFrame =
+            (_currentFrame + 1) % 2; // Ghost sprites only have 2 frames so keep switching between frame 0 and 1
     }
 
     float screenX;

@@ -12,6 +12,7 @@ std::vector<std::shared_ptr<EntityView>> SFMLFactory::getViews() const { return 
 
 void SFMLFactory::setScoreObserver(const std::shared_ptr<logic::Observer>& observer) { _scoreObserver = observer; }
 
+// Creates the pacman entity, attaches score observer and PacmanView then returns it.
 std::unique_ptr<logic::Pacman> SFMLFactory::createPacman(float x, float y, float width, float height, int spawnTileX,
                                                          int spawnTileY) {
     std::unique_ptr<logic::Pacman> pacman =
@@ -27,6 +28,7 @@ std::unique_ptr<logic::Pacman> SFMLFactory::createPacman(float x, float y, float
     return pacman;
 }
 
+// Creates the wall entity, attaches WallView then returns it.
 std::unique_ptr<logic::Wall> SFMLFactory::createWall(float x, float y, float width, float height) {
     std::unique_ptr<logic::Wall> wall = std::make_unique<logic::Wall>(x, y, width, height);
 
@@ -37,6 +39,7 @@ std::unique_ptr<logic::Wall> SFMLFactory::createWall(float x, float y, float wid
     return wall;
 }
 
+// Creates the coin entity, attaches score observer and CoinView then returns it.
 std::unique_ptr<logic::Coin> SFMLFactory::createCoin(float x, float y, float width, float height) {
     std::unique_ptr<logic::Coin> coin = std::make_unique<logic::Coin>(x, y, width, height);
 
@@ -50,6 +53,7 @@ std::unique_ptr<logic::Coin> SFMLFactory::createCoin(float x, float y, float wid
     return coin;
 }
 
+// Creates the fruit entity, attaches score observer and FruitView then returns it.
 std::unique_ptr<logic::Fruit> SFMLFactory::createFruit(float x, float y, float width, float height) {
     std::unique_ptr<logic::Fruit> fruit = std::make_unique<logic::Fruit>(x, y, width, height);
 
@@ -63,6 +67,7 @@ std::unique_ptr<logic::Fruit> SFMLFactory::createFruit(float x, float y, float w
     return fruit;
 }
 
+// Creates the ghost entity, attaches GhostView then returns it.
 std::unique_ptr<logic::Ghost> SFMLFactory::createGhost(float x, float y, float width, float height, int spawnTileX,
                                                        int spawnTileY, logic::GhostType ghostType) {
     std::unique_ptr<logic::Ghost> ghost =

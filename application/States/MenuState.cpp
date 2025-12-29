@@ -10,11 +10,17 @@
 
 namespace application {
 
+// Initialises Score class to use a method to read the top 5 high scores
 MenuState::MenuState(StateManager& stateManager)
-    : _stateManager(stateManager), _score(std::make_shared<logic::Score>()) {}
+    : _stateManager(stateManager), _score(std::make_shared<logic::Score>()), _highScores(_score->getHighscores()) {}
 
 void MenuState::handleEvent(const sf::Event& event) {
+    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
+        _stateManager.changeState(std::make_unique<PlayingState>(_stateManager));
+    }
+
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+        // Check if mouse button was pressed inside the play button
         sf::Vector2i mousePos = {event.mouseButton.x, event.mouseButton.y};
         if (_playButtonBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
             _stateManager.changeState(std::make_unique<PlayingState>(_stateManager));
@@ -24,10 +30,9 @@ void MenuState::handleEvent(const sf::Event& event) {
 
 void MenuState::update() {}
 
+// Renders title, high scores and play button
 void MenuState::render(sf::RenderWindow& window) {
-    sf::Font font = ResourceLoader::getInstance()->getFont();
-
-    std::vector<int> scores = _score->getHighscores();
+    sf::Font font = ResourceLoader::getInstance().getFont();
 
     float centerX = window.getSize().x / 2.0f;
     float yPosition = 20.0f;
@@ -50,7 +55,7 @@ void MenuState::render(sf::RenderWindow& window) {
     window.draw(scoresTitle);
     yPosition += 40.0f;
 
-    if (scores.empty()) {
+    if (_highScores.empty()) {
         sf::Text noScoresText;
         noScoresText.setFont(font);
         noScoresText.setString("No scores yet");
@@ -59,10 +64,10 @@ void MenuState::render(sf::RenderWindow& window) {
         noScoresText.setPosition(centerX - noScoresText.getLocalBounds().width / 2.0f, yPosition);
         window.draw(noScoresText);
     } else {
-        for (int i = 0; i < scores.size(); i++) {
+        for (int i = 0; i < _highScores.size(); i++) {
             sf::Text scoreText;
             scoreText.setFont(font);
-            scoreText.setString(std::to_string(i + 1) + ". " + std::to_string(scores[i]));
+            scoreText.setString(std::to_string(i + 1) + ". " + std::to_string(_highScores[i]));
             scoreText.setCharacterSize(18);
             scoreText.setFillColor(sf::Color::White);
             scoreText.setPosition(centerX - scoreText.getLocalBounds().width / 2.0f, yPosition);
@@ -85,6 +90,7 @@ void MenuState::render(sf::RenderWindow& window) {
 
     _playButtonBounds = playRect.getGlobalBounds();
 
+    // Center the text inside the button rectangle
     sf::FloatRect textBounds = playText.getLocalBounds();
     playText.setPosition(
         playRect.getPosition().x + playRect.getSize().x / 2.0f - (textBounds.left + textBounds.width / 2.0f),

@@ -5,6 +5,9 @@
 
 namespace application {
 
+/**
+ * @brief Paused state showing a button to continue playing and a button to return to MenuState
+ */
 class PausedState : public State {
 public:
     explicit PausedState(StateManager& stateManager);

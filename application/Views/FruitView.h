@@ -7,6 +7,11 @@
 
 namespace application {
 
+/**
+ * @brief Renders Fruit entities
+ *
+ * Concrete implementation of EntityView for Fruit entity
+ */
 class FruitView : public EntityView {
 public:
     explicit FruitView(const logic::Fruit& fruit);
@@ -19,6 +24,7 @@ private:
     const logic::Fruit& _model;
     sf::Sprite _sprite;
 
+    // Sprite layout constants
     static constexpr int SPRITE_SIZE = 36; // size in pixels of fruit
     static constexpr int X_OFFSET = 601;   // x offset pixels on spritesheet
     static constexpr int Y_OFFSET = 3;     // y offset pixels on spritesheet

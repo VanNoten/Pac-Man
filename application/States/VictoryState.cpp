@@ -16,16 +16,18 @@ VictoryState::VictoryState(StateManager& stateManager, std::shared_ptr<logic::Sc
     : _stateManager(stateManager), _score(std::move(score)), _livesLeft(livesLeft), _currentLevel(currentLevel) {}
 
 void VictoryState::handleEvent(const sf::Event& event) {
+    // Check if mouse button was pressed inside any of the buttons
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         const sf::Vector2i mousePos = {event.mouseButton.x, event.mouseButton.y};
 
         if (_nextLevelButtonBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-            _stateManager.changeState(
-                std::make_unique<PlayingState>(_stateManager, _score, _livesLeft, _currentLevel + 1));
+            _stateManager.changeState(std::make_unique<PlayingState>(
+                _stateManager, _score, _livesLeft,
+                _currentLevel + 1)); // Transition to new PlayingState with incremented level
         }
 
         if (_mainMenuButtonBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-            _stateManager.changeState(std::make_unique<MenuState>(_stateManager));
+            _stateManager.changeState(std::make_unique<MenuState>(_stateManager)); // Return to main menu
         }
     }
 }
@@ -33,7 +35,7 @@ void VictoryState::handleEvent(const sf::Event& event) {
 void VictoryState::update() {}
 
 void VictoryState::render(sf::RenderWindow& window) {
-    sf::Font font = ResourceLoader::getInstance()->getFont();
+    sf::Font font = ResourceLoader::getInstance().getFont();
 
     sf::RectangleShape backgroundRect({static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y)});
     backgroundRect.setFillColor(sf::Color({0, 0, 0, 230}));
@@ -51,6 +53,7 @@ void VictoryState::render(sf::RenderWindow& window) {
     levelClearText.setPosition(centerX - levelClearText.getLocalBounds().width / 2.0f, 100.0f);
     window.draw(levelClearText);
 
+    // Calculate how big one button is so we can vertically center two buttons
     sf::Text tempText;
     tempText.setFont(font);
     tempText.setString("Next Level");
@@ -74,6 +77,7 @@ void VictoryState::render(sf::RenderWindow& window) {
 
     _nextLevelButtonBounds = nextLevelRect.getGlobalBounds();
 
+    // Check if mouse button was pressed inside any of the buttons
     sf::FloatRect textBounds = nextLevelText.getLocalBounds();
     nextLevelText.setPosition(
         nextLevelRect.getPosition().x + nextLevelRect.getSize().x / 2.0f - (textBounds.left + textBounds.width / 2.0f),
@@ -96,6 +100,7 @@ void VictoryState::render(sf::RenderWindow& window) {
 
     _mainMenuButtonBounds = mainMenuRect.getGlobalBounds();
 
+    // Check if mouse button was pressed inside any of the buttons
     sf::FloatRect mainMenuTextBounds = mainMenuText.getLocalBounds();
     mainMenuText.setPosition(mainMenuRect.getPosition().x + mainMenuRect.getSize().x / 2.0f -
                                  (mainMenuTextBounds.left + mainMenuTextBounds.width / 2.0f),

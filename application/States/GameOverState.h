@@ -5,6 +5,9 @@
 
 namespace application {
 
+/**
+ * @brief Game over state showing a button to restart game and a button to return to MenuState
+ */
 class GameOverState : public State {
 public:
     explicit GameOverState(StateManager& stateManager);

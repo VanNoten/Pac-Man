@@ -14,15 +14,16 @@ namespace application {
 GameOverState::GameOverState(StateManager& stateManager) : _stateManager(stateManager) {}
 
 void GameOverState::handleEvent(const sf::Event& event) {
+    // Check if mouse button was pressed inside any of the buttons
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         sf::Vector2i mousePos = {event.mouseButton.x, event.mouseButton.y};
 
         if (_restartButtonBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-            _stateManager.changeState(std::make_unique<PlayingState>(_stateManager));
+            _stateManager.changeState(std::make_unique<PlayingState>(_stateManager)); // Restart game
         }
 
         if (_mainMenuButtonBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-            _stateManager.changeState(std::make_unique<MenuState>(_stateManager));
+            _stateManager.changeState(std::make_unique<MenuState>(_stateManager)); // Return to main menu
         }
     }
 }
@@ -30,7 +31,7 @@ void GameOverState::handleEvent(const sf::Event& event) {
 void GameOverState::update() {}
 
 void GameOverState::render(sf::RenderWindow& window) {
-    sf::Font font = ResourceLoader::getInstance()->getFont();
+    sf::Font font = ResourceLoader::getInstance().getFont();
 
     sf::RectangleShape backgroundRect({static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y)});
     backgroundRect.setFillColor(sf::Color({0, 0, 0, 230}));
@@ -48,6 +49,7 @@ void GameOverState::render(sf::RenderWindow& window) {
     gameOverText.setPosition(centerX - gameOverText.getLocalBounds().width / 2.0f, 100.0f);
     window.draw(gameOverText);
 
+    // Calculate how big one button is so we can vertically center two buttons
     sf::Text tempText;
     tempText.setFont(font);
     tempText.setString("Restart Game");
@@ -71,6 +73,7 @@ void GameOverState::render(sf::RenderWindow& window) {
 
     _restartButtonBounds = restartRect.getGlobalBounds();
 
+    // Check if mouse button was pressed inside any of the buttons
     sf::FloatRect textBounds = restartText.getLocalBounds();
     restartText.setPosition(
         restartRect.getPosition().x + restartRect.getSize().x / 2.0f - (textBounds.left + textBounds.width / 2.0f),
@@ -93,6 +96,7 @@ void GameOverState::render(sf::RenderWindow& window) {
 
     _mainMenuButtonBounds = mainMenuRect.getGlobalBounds();
 
+    // Check if mouse button was pressed inside any of the buttons
     sf::FloatRect mainMenuTextBounds = mainMenuText.getLocalBounds();
     mainMenuText.setPosition(mainMenuRect.getPosition().x + mainMenuRect.getSize().x / 2.0f -
                                  (mainMenuTextBounds.left + mainMenuTextBounds.width / 2.0f),

@@ -7,6 +7,11 @@
 
 namespace application {
 
+/**
+ * @brief Renders Coin entities
+ *
+ * Concrete implementation of EntityView for Coin entity
+ */
 class CoinView : public EntityView {
 public:
     explicit CoinView(const logic::Coin& coin);
@@ -19,6 +24,7 @@ private:
     const logic::Coin& _model;
     sf::Sprite _sprite;
 
+    // Sprite layout constants
     static constexpr int SPRITE_SIZE = 16; // size in pixels of coin
     static constexpr int X_OFFSET = 411;   // x offset pixels on spritesheet
     static constexpr int Y_OFFSET = 313;   // y offset pixels on spritesheet

@@ -6,7 +6,7 @@
 namespace application {
 
 CoinView::CoinView(const logic::Coin& coin) : _model(coin) {
-    const sf::Texture& texture = ResourceLoader::getInstance()->getSpriteSheet();
+    const sf::Texture& texture = ResourceLoader::getInstance().getSpriteSheet();
     _sprite.setTexture(texture);
     _sprite.setTextureRect(_spriteRect);
 }

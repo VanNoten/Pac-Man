@@ -520,7 +520,7 @@ Direction World::getNextGhostDirection(const Ghost& ghost) const {
         return possibleDirections[0];
 
     if (ghostType == GhostType::Locked) {
-        if (Random::getInstance()->chance(0.5)) {
+        if (Random::getInstance().chance(0.5)) {
             std::vector<Direction> filteredDirections;
             for (const auto direction : possibleDirections) {
                 if (direction != ghost.getDirection()) {
@@ -529,7 +529,7 @@ Direction World::getNextGhostDirection(const Ghost& ghost) const {
             }
 
             if (!filteredDirections.empty()) {
-                return filteredDirections[Random::getInstance()->randomIndex(filteredDirections.size())];
+                return filteredDirections[Random::getInstance().randomIndex(filteredDirections.size())];
             }
         }
 
@@ -544,7 +544,7 @@ Direction World::getNextGhostDirection(const Ghost& ghost) const {
         if (canKeepGoing) {
             return ghost.getDirection();
         }
-        return possibleDirections[Random::getInstance()->randomIndex(possibleDirections.size())];
+        return possibleDirections[Random::getInstance().randomIndex(possibleDirections.size())];
     }
 
     if (ghostType == GhostType::AheadChaser1 || ghostType == GhostType::AheadChaser2) {
@@ -579,7 +579,7 @@ Direction World::getNextGhostDirection(const Ghost& ghost) const {
         }
 
         if (!bestDirections.empty()) {
-            return bestDirections[Random::getInstance()->randomIndex(bestDirections.size())];
+            return bestDirections[Random::getInstance().randomIndex(bestDirections.size())];
         }
 
         return ghost.getDirection();
@@ -615,7 +615,7 @@ Direction World::getNextGhostDirection(const Ghost& ghost) const {
         }
 
         if (!bestDirections.empty()) {
-            return bestDirections[Random::getInstance()->randomIndex(bestDirections.size())];
+            return bestDirections[Random::getInstance().randomIndex(bestDirections.size())];
         }
 
         return ghost.getDirection();
@@ -654,7 +654,7 @@ Direction World::getNextFearedGhostDirection(const Ghost& ghost) const {
     }
 
     if (!bestDirections.empty()) {
-        return bestDirections[Random::getInstance()->randomIndex(bestDirections.size())];
+        return bestDirections[Random::getInstance().randomIndex(bestDirections.size())];
     }
 
     return ghost.getDirection();

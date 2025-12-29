@@ -6,7 +6,7 @@
 namespace application {
 
 FruitView::FruitView(const logic::Fruit& fruit) : _model(fruit) {
-    const sf::Texture& texture = ResourceLoader::getInstance()->getSpriteSheet();
+    const sf::Texture& texture = ResourceLoader::getInstance().getSpriteSheet();
     _sprite.setTexture(texture);
     _sprite.setTextureRect(_spriteRect);
 }

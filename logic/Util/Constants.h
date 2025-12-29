@@ -1,8 +1,15 @@
+/**
+ * @file Constants.h
+ * @brief Contains constants for game configuration.
+ */
+
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
 namespace logic {
 namespace GameConstants {
+
+static constexpr std::string HIGHSCORES_FILE = "highscores.txt";
 
 static constexpr int STARTING_LIVES = 3;
 

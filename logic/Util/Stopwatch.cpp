@@ -2,12 +2,9 @@
 
 namespace logic {
 
-Stopwatch* Stopwatch::_instance = nullptr;
-
-Stopwatch* Stopwatch::getInstance() {
-    if (!_instance)
-        _instance = new Stopwatch();
-    return _instance;
+Stopwatch& Stopwatch::getInstance() {
+    static Stopwatch instance;
+    return instance;
 }
 
 double Stopwatch::getDeltaTime() {

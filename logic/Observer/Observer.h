@@ -3,8 +3,16 @@
 
 namespace logic {
 
+/**
+ * @brief The different type of events.
+ */
 enum class EventType { Move, CoinCollected, FruitCollected, GhostEaten, GameOver, LevelCleared, DirectionChanged };
 
+/**
+ * @brief Abstract base class that allows other classes to receive events from subjects.
+ *
+ * Implements Observer/Subject design pattern.
+ */
 class Observer {
 public:
     virtual ~Observer() = default;

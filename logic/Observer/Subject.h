@@ -8,11 +8,24 @@
 
 namespace logic {
 
+/**
+ * @brief Class that allows other classes to send out events to the attached observers.
+ *
+ * Implements Observer/Subject design pattern.
+ */
 class Subject {
 public:
+    /**
+     * @brief Adds an observer to the subject.
+     * @param observer Observer to add.
+     */
     void addObserver(const std::shared_ptr<Observer>& observer);
 
 protected:
+    /**
+     * @brief Sends an event to all attached observers.
+     * @param event Event to send out.
+     */
     void notify(EventType event) const;
 
 private:

@@ -4,12 +4,9 @@
 
 namespace application {
 
-ResourceLoader* ResourceLoader::_instance = nullptr;
-
-ResourceLoader* ResourceLoader::getInstance() {
-    if (!_instance)
-        _instance = new ResourceLoader();
-    return _instance;
+ResourceLoader& ResourceLoader::getInstance() {
+    static ResourceLoader instance;
+    return instance;
 }
 
 const sf::Font& ResourceLoader::getFont() const { return _font; }

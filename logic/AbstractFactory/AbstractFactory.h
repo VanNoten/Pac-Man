@@ -9,6 +9,12 @@
 
 namespace logic {
 
+/**
+ * @brief Abstract interface for creating game entities.
+ *
+ * Implements the Abstract Factory design pattern so the logic library does not have any knowledge of how the game is
+ * represented.
+ */
 class AbstractFactory {
 public:
     virtual ~AbstractFactory() = default;
