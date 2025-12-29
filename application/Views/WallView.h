@@ -11,7 +11,7 @@ public:
     explicit WallView(const logic::Wall& wall);
     ~WallView() override = default;
     void onNotify(logic::EventType event) override;
-    void draw(sf::RenderWindow& window, const Camera& camera) override;
+    void draw(sf::RenderWindow& window, const Camera& camera, float deltaTime) override;
 
 private:
     const logic::Wall& _model;

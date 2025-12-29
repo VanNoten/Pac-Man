@@ -8,7 +8,7 @@ WallView::WallView(const logic::Wall& wall) : _model(wall) {}
 
 void WallView::onNotify(logic::EventType event) {}
 
-void WallView::draw(sf::RenderWindow& window, const Camera& camera) {
+void WallView::draw(sf::RenderWindow& window, const Camera& camera, float deltaTime) {
     float screenX;
     float screenY;
     camera.worldToScreen(_model.getX(), _model.getY(), screenX, screenY);

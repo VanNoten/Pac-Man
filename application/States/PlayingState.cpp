@@ -67,10 +67,10 @@ void PlayingState::update() {
         _mapLoaded = true;
     }
 
-    float deltaTime = static_cast<float>(logic::Stopwatch::getInstance()->getDeltaTime());
+    _deltaTime = static_cast<float>(logic::Stopwatch::getInstance()->getDeltaTime());
 
-    _world->update(deltaTime);
-    _score->updateTick(deltaTime);
+    _world->update(_deltaTime);
+    _score->updateTick(_deltaTime);
 
     if (_world->getIsGameOver()) {
         _stateManager.pushState(std::make_unique<GameOverState>(_stateManager));
@@ -88,7 +88,7 @@ void PlayingState::render(sf::RenderWindow& window) {
     }
 
     for (const auto& view : _sfmlFactory.getViews()) {
-        view->draw(window, *_camera);
+        view->draw(window, *_camera, _deltaTime);
     }
 
     std::string posString =

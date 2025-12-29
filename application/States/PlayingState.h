@@ -28,6 +28,7 @@ private:
     int _livesLeft = logic::GameConstants::STARTING_LIVES;
     int _currentLevel = 1;
     bool _mapLoaded = false;
+    float _deltaTime = 0.0f;
 };
 
 } // namespace application

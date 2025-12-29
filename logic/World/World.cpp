@@ -144,14 +144,14 @@ void World::loadMap(const std::vector<std::string>& map, const int pacmanLives, 
             } break;
             case '2': {
                 std::unique_ptr<Ghost> ghost =
-                    _factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, c, r, GhostType::AheadChaser);
+                    _factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, c, r, GhostType::AheadChaser1);
                 ghost->setActive(false);
                 _ghosts.push_back(std::move(ghost));
                 _ghostDelayTimers.push_back(GameConstants::GHOST_2_DELAY);
             } break;
             case '3': {
                 std::unique_ptr<Ghost> ghost =
-                    _factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, c, r, GhostType::AheadChaser);
+                    _factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, c, r, GhostType::AheadChaser2);
                 ghost->setActive(false);
                 _ghosts.push_back(std::move(ghost));
                 _ghostDelayTimers.push_back(GameConstants::GHOST_3_DELAY);
@@ -406,6 +406,7 @@ void World::resetGhostsAndPacman() {
     const int pacSpawnTileX = _pacman->getSpawnTileX();
     const int pacSpawnTileY = _pacman->getSpawnTileY();
     _pacman->setPosition(getTileCenterX(pacSpawnTileX), getTileCenterY(pacSpawnTileY));
+    _pacman->setDirection(Direction::RIGHT);
 
     for (const auto& ghost : _ghosts) {
         const int spawnTileX = ghost->getSpawnTileX();
@@ -542,7 +543,7 @@ Direction World::getNextGhostDirection(const Ghost& ghost) const {
         return possibleDirections[Random::getInstance()->randomIndex(possibleDirections.size())];
     }
 
-    if (ghostType == GhostType::AheadChaser) {
+    if (ghostType == GhostType::AheadChaser1 || ghostType == GhostType::AheadChaser2) {
         std::vector<Direction> possibleDirections = getPossibleDirections(ghost);
 
         if (possibleDirections.size() == 1)

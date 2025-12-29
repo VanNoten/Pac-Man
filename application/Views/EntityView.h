@@ -10,7 +10,7 @@ namespace application {
 class EntityView : public logic::Observer {
 public:
     virtual ~EntityView() = default;
-    virtual void draw(sf::RenderWindow& window, const Camera& camera) = 0;
+    virtual void draw(sf::RenderWindow& window, const Camera& camera, float deltaTime) = 0;
 };
 
 } // namespace application

@@ -2,6 +2,7 @@
 #define GHOSTVIEW_H
 
 #include <Entities/Ghost.h>
+#include <SFML/Graphics/Sprite.hpp>
 #include <Views/EntityView.h>
 
 namespace application {
@@ -11,11 +12,23 @@ public:
     explicit GhostView(const logic::Ghost& ghost);
     ~GhostView() override = default;
     void onNotify(logic::EventType event) override;
-    void draw(sf::RenderWindow& window, const Camera& camera) override;
+    void draw(sf::RenderWindow& window, const Camera& camera, float deltaTime) override;
 
 private:
-    logic::GhostType _ghostType;
+    sf::IntRect getSpriteRect() const;
+
     const logic::Ghost& _model;
+    sf::Sprite _sprite;
+    int _currentFrame = 0;
+    float _animationTimer = 0.0f;
+
+    static constexpr float ANIMATION_SPEED = 0.3f;
+    static constexpr int SPRITE_SIZE = 35;      // size in pixels of ghosts
+    static constexpr int X_OFFSET = 651;        // x offset pixels on spritesheet for first ghost
+    static constexpr int Y_OFFSET = 4;          // y offset pixels on spritesheet for ghosts
+    static constexpr int PIXELS_BETWEEN = 15;   // amount of pixels in between each frame of ghosts on spritesheet
+    static constexpr int X_OFFSET_FEARED = 1;   // feared ghost only looks in one direction so hardcoded
+    static constexpr int Y_OFFSET_FEARED = 554; // feared ghost only looks in one direction so hardcoded
 };
 
 } // namespace application

@@ -6,7 +6,7 @@
 
 namespace logic {
 
-enum class GhostType { Locked, AheadChaser, Chaser };
+enum class GhostType { Locked, AheadChaser1, AheadChaser2, Chaser };
 
 class Ghost : public EntityModel {
 public:
