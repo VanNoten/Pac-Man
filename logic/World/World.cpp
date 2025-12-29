@@ -412,7 +412,10 @@ void World::resetGhostsAndPacman() {
         const int spawnTileX = ghost->getSpawnTileX();
         const int spawnTileY = ghost->getSpawnTileY();
         ghost->setPosition(getTileCenterX(spawnTileX), getTileCenterY(spawnTileY));
+        ghost->setIsFeared(false);
     }
+
+    _ghostsAreFeared = false;
 }
 
 bool World::isColliding(const Bounds& A, const Bounds& B) {
