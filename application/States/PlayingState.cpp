@@ -104,14 +104,7 @@ void PlayingState::render(sf::RenderWindow& window) {
         view->draw(window, *_camera, _deltaTime);
     }
 
-    std::string posString =
-        std::to_string(_world->getPacman().getX()) + ", " + std::to_string(_world->getPacman().getY());
     sf::Font font = ResourceLoader::getInstance().getFont();
-    sf::Text pos;
-    pos.setFont(font);
-    pos.setFillColor(sf::Color::Green);
-    pos.setString(posString);
-    window.draw(pos);
 
     sf::Text scoreText;
     scoreText.setFont(font);
@@ -123,7 +116,7 @@ void PlayingState::render(sf::RenderWindow& window) {
 
     sf::Text livesText;
     livesText.setFont(font);
-    livesText.setString("Lives: " + std::to_string(_world->getPacman().getLives()));
+    livesText.setString("Lives: " + std::to_string(_world->getPacmanLives()));
     livesText.setCharacterSize(24);
     livesText.setFillColor(sf::Color::White);
     livesText.setPosition(0, 60);

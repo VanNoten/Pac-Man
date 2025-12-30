@@ -10,7 +10,7 @@ namespace logic {
 
 World::World(AbstractFactory& factory) : _factory(factory) {}
 
-void World::handleAction(Actions action) const {
+void World::handleAction(const Actions action) const {
     switch (action) {
     case Actions::Up:
         _pacman->setWantedDirection(Direction::UP);
@@ -55,13 +55,14 @@ void World::update(const float deltaTime) {
 
         handleGhostMovement(*ghost, deltaTime);
 
+        // Handle pacman-ghost collision, if ghost is feared -> pacman eats ghost, else pacman dies
         if (isColliding(_pacman->getBounds(), ghost->getBounds())) {
             if (ghost->getIsFeared()) {
                 const int tileX = ghost->getSpawnTileX();
                 const int tileY = ghost->getSpawnTileY();
                 const float tileCenterX = getTileCenterX(tileX);
                 const float tileCenterY = getTileCenterY(tileY);
-                ghost->setPosition(tileCenterX, tileCenterY);
+                ghost->setPosition(tileCenterX, tileCenterY); // Ghost teleports back to its spawn tile
                 ghost->setIsFeared(false);
                 ghost->setActive(true);
                 _pacman->eatGhost();
@@ -71,23 +72,25 @@ void World::update(const float deltaTime) {
         }
     }
 
+    // Handle pacman-coin collection
     for (const auto& coin : _coins) {
         if (!coin->isCollected() && isColliding(_pacman->getBounds(), coin->getBounds())) {
             coin->collect();
             _collectablesLeft--;
             if (_collectablesLeft <= 0) {
-                notify(EventType::LevelCleared);
+                notify(EventType::LevelCleared); // LevelCleared event sent to Score observer
                 _isGameVictory = true;
             }
         }
     }
 
+    // Handle pacman-fruit collection
     for (const auto& fruit : _fruits) {
         if (!fruit->isCollected() && isColliding(_pacman->getBounds(), fruit->getBounds())) {
             fruit->collect();
             _collectablesLeft--;
             if (_collectablesLeft <= 0) {
-                notify(EventType::LevelCleared);
+                notify(EventType::LevelCleared); // LevelCleared event sent to Score observer
                 _isGameVictory = true;
             }
 
@@ -106,17 +109,25 @@ void World::loadMap(const std::vector<std::string>& map, const int pacmanLives, 
     const int rows = map.size();
     const int cols = map[0].size();
 
+    // Calculate the size of one cell for coordinate system bounded by [-1, 1]
     _cell = 2.0f / std::max(cols, rows);
 
+    // Max total width and height is 2
     const float totalWidth = _cell * cols;
     const float totalHeight = _cell * rows;
 
-    _originX = -totalWidth * 0.5f;
-    _originY = totalHeight * 0.5f;
+    _originX = -totalWidth * 0.5f; // Left edge of the map
+    _originY = totalHeight * 0.5f; // Top edge of the map
 
+    // Read through the map and create the correct entity depending on the character read
     for (int r = 0; r < rows; ++r) {
         for (int c = 0; c < cols; ++c) {
+            // X coordinate is in the center of a cell
+            // Formula: Left edge of map + (cell size * current column) + (cell size * 0.5)
             const float x = _originX + _cell * (c + 0.5f);
+
+            // Y coordinate is in the center of a cell
+            // Formula: Top edge of map - (cell size * current row) - (cell size * 0.5)
             const float y = _originY - _cell * (r + 0.5f);
 
             switch (map[r][c]) {
@@ -135,6 +146,7 @@ void World::loadMap(const std::vector<std::string>& map, const int pacmanLives, 
                 _fruits.push_back(_factory.createFruit(x, y, _cell * 0.6f, _cell * 0.6f));
                 _collectablesLeft += 1;
                 break;
+            // Create the four ghosts and push the corresponding timers
             case '1': {
                 std::unique_ptr<Ghost> ghost =
                     _factory.createGhost(x, y, _cell * 0.9f, _cell * 0.9f, c, r, GhostType::Locked);
@@ -170,7 +182,7 @@ void World::loadMap(const std::vector<std::string>& map, const int pacmanLives, 
     }
 
     _currentLevel = currentLevel;
-    setSpeedsForLevel();
+    setSpeedsForLevel(); // Set the right speeds and durations for the current level
 }
 
 int World::getCurrentLevel() const { return _currentLevel; }
@@ -178,22 +190,6 @@ int World::getCurrentLevel() const { return _currentLevel; }
 bool World::getIsGameOver() const { return _isGameOver; }
 
 bool World::getIsGameVictory() const { return _isGameVictory; }
-
-const std::vector<std::unique_ptr<Wall>>& World::getWalls() const { return _walls; }
-
-const std::vector<std::unique_ptr<Coin>>& World::getCoins() const { return _coins; }
-
-const std::vector<std::unique_ptr<Fruit>>& World::getFruits() const { return _fruits; }
-
-const std::vector<std::unique_ptr<Ghost>>& World::getActiveGhosts() const { return _ghosts; }
-
-Pacman& World::getPacman() const { return *_pacman; }
-
-void World::setPacmanLives(const int lives) const {
-    if (_pacman) {
-        _pacman->setLives(lives);
-    }
-}
 
 int World::getPacmanLives() const {
     if (_pacman) {
@@ -206,6 +202,7 @@ void World::handlePacmanMovement(const float deltaTime) const {
     if (!_pacman)
         return;
 
+    // Calculate the amount of distance to move using deltaTime
     const float speed = _pacman->getSpeed();
     const float moveDistance = speed * deltaTime;
 
@@ -224,6 +221,7 @@ void World::handlePacmanMovement(const float deltaTime) const {
     if (currentDirection == Direction::DOWN && wantedDirection == Direction::UP)
         isReverseDirection = true;
 
+    // Reverse direction changes are allowed instantly for better responsiveness
     if (isReverseDirection) {
         _pacman->setDirection(wantedDirection);
         currentDirection = wantedDirection;
@@ -234,18 +232,24 @@ void World::handlePacmanMovement(const float deltaTime) const {
     const float centerX = getTileCenterX(tileX);
     const float centerY = getTileCenterY(tileY);
 
+    // Calculate squared distance from pacman to the center of the current tile
+    // (using squared distance avoids expensive sqrt calculation)
     float distanceToCenterTile = (x - centerX) * (x - centerX) + (y - centerY) * (y - centerY);
+
+    // If close enough to the center we allow pacman to change direction if possible
     if (distanceToCenterTile < moveDistance * moveDistance + 1e-4f) {
         if (wantedDirection != currentDirection) {
+            // Get the tile pacman wants to go to and only allow direction change if that tile is not a wall
             std::pair<int, int> nextTile = getTileInDirection(tileX, tileY, wantedDirection);
 
             if (!isWallAtTile(nextTile.first, nextTile.second)) {
-                _pacman->setPosition(centerX, centerY);
+                _pacman->setPosition(centerX, centerY); // Snap pacman to the center of the tile
                 _pacman->setDirection(wantedDirection);
                 currentDirection = wantedDirection;
             }
         }
 
+        // Check if tile pacman is going to is a wall, if it is then set pacman to the center of that tile and return
         std::pair<int, int> tileInfront = getTileInDirection(tileX, tileY, currentDirection);
 
         if (isWallAtTile(tileInfront.first, tileInfront.second)) {
@@ -254,6 +258,7 @@ void World::handlePacmanMovement(const float deltaTime) const {
         }
     }
 
+    // Calculate how much pacman needs to move in x and y and move pacman
     float moveX = 0.0f;
     float moveY = 0.0f;
     switch (currentDirection) {
@@ -275,6 +280,7 @@ void World::handlePacmanMovement(const float deltaTime) const {
 }
 
 void World::handleGhostMovement(Ghost& ghost, const float deltaTime) const {
+    // Calculate the amount of distance to move using deltaTime
     const float speed = ghost.getSpeed();
     const float moveDistance = speed * deltaTime;
 
@@ -287,12 +293,21 @@ void World::handleGhostMovement(Ghost& ghost, const float deltaTime) const {
 
     Direction currentDirection = ghost.getDirection();
 
-    bool isNewTile = tileX != ghost.getLastDecisionTileX() || tileY != ghost.getLastDecisionTileY();
+    // Check if ghost has already made a direction change decision on its current tile
+    const bool isNewTile = tileX != ghost.getLastDecisionTileX() || tileY != ghost.getLastDecisionTileY();
+
+    // Calculate squared distance from ghost to the center of the current tile
+    // (using squared distance avoids expensive sqrt calculation)
     float distanceToCenterTile = (x - centerX) * (x - centerX) + (y - centerY) * (y - centerY);
+
+    // If ghost is close enough to tile center and has not made a direction change decision yet, we allow ghost to
+    // change direction if possible
     if (distanceToCenterTile < moveDistance * moveDistance + 1e-4f && isNewTile) {
         ghost.setLastDecisionTile(tileX, tileY);
 
         Direction nextDirection;
+        // If ghost is not feared it will try to minimize manhattan distance from pacman, else maximize manhattan
+        // distance
         if (!ghost.getIsFeared()) {
             nextDirection = getNextGhostDirection(ghost);
         } else {
@@ -300,11 +315,13 @@ void World::handleGhostMovement(Ghost& ghost, const float deltaTime) const {
         }
 
         ghost.setDirection(nextDirection);
+        // Snap ghost to center if direction is different to previous direction
         if (currentDirection != nextDirection) {
             ghost.setPosition(centerX, centerY);
             currentDirection = nextDirection;
         }
 
+        // Check if tile ghost is going to is a wall, if it is then set ghost to the center of that tile and return
         std::pair<int, int> tileInfront = getTileInDirection(tileX, tileY, currentDirection);
 
         if (isWallAtTile(tileInfront.first, tileInfront.second)) {
@@ -313,6 +330,7 @@ void World::handleGhostMovement(Ghost& ghost, const float deltaTime) const {
         }
     }
 
+    // Calculate how much ghost needs to move in x and y and move ghost
     float moveX = 0.0f;
     float moveY = 0.0f;
     switch (currentDirection) {
@@ -334,6 +352,7 @@ void World::handleGhostMovement(Ghost& ghost, const float deltaTime) const {
 }
 
 void World::activateGhosts(const float deltaTime) {
+    // Go through all ghost delay timers and activate each ghost after their corresponding delay
     for (int i = 0; i < _ghostDelayTimers.size(); i++) {
         if (i < _ghosts.size() && !_ghosts[i]->getIsActive()) {
             if (_ghostDelayTimers[i] > 0.0f) {
@@ -513,12 +532,14 @@ std::vector<Direction> World::getPossibleDirections(const Ghost& ghost) const {
 }
 
 Direction World::getNextGhostDirection(const Ghost& ghost) const {
-    GhostType ghostType = ghost.getGhostType();
+    const GhostType ghostType = ghost.getGhostType();
     std::vector<Direction> possibleDirections = getPossibleDirections(ghost);
 
     if (possibleDirections.size() == 1)
         return possibleDirections[0];
 
+    // For the locked ghost type it has a 50% chance of switching directions at an intersection or continuing with the
+    // current locked direction
     if (ghostType == GhostType::Locked) {
         if (Random::getInstance().chance(0.5)) {
             std::vector<Direction> filteredDirections;
@@ -533,6 +554,7 @@ Direction World::getNextGhostDirection(const Ghost& ghost) const {
             }
         }
 
+        // Check if ghost can continue in locked direction
         bool canKeepGoing = false;
         for (const auto direction : possibleDirections) {
             if (direction == ghost.getDirection()) {
@@ -544,15 +566,19 @@ Direction World::getNextGhostDirection(const Ghost& ghost) const {
         if (canKeepGoing) {
             return ghost.getDirection();
         }
+
+        // If current locked direction is not possible just pick a random possible direction
         return possibleDirections[Random::getInstance().randomIndex(possibleDirections.size())];
     }
 
+    // AheadChaser ghost type tries to minimize the manhattan distance to the tile infront of pacman
     if (ghostType == GhostType::AheadChaser1 || ghostType == GhostType::AheadChaser2) {
         std::vector<Direction> possibleDirections = getPossibleDirections(ghost);
 
         if (possibleDirections.size() == 1)
             return possibleDirections[0];
 
+        // Get the smallest manhattan distance(s) out of all possible directions
         int minManhattanDistance = std::numeric_limits<int>::max();
         std::vector<Direction> bestDirections;
 
@@ -578,6 +604,7 @@ Direction World::getNextGhostDirection(const Ghost& ghost) const {
             }
         }
 
+        // If there are multiple directions with the same manhattan distance just pick a random one
         if (!bestDirections.empty()) {
             return bestDirections[Random::getInstance().randomIndex(bestDirections.size())];
         }
@@ -585,12 +612,14 @@ Direction World::getNextGhostDirection(const Ghost& ghost) const {
         return ghost.getDirection();
     }
 
+    // Chaser ghost type tries to minimize the manhattan distance to the tile pacman is on
     if (ghostType == GhostType::Chaser) {
         std::vector<Direction> possibleDirections = getPossibleDirections(ghost);
 
         if (possibleDirections.size() == 1)
             return possibleDirections[0];
 
+        // Get the smallest manhattan distance(s) out of all possible directions
         int minManhattanDistance = std::numeric_limits<int>::max();
         std::vector<Direction> bestDirections;
 
@@ -614,6 +643,7 @@ Direction World::getNextGhostDirection(const Ghost& ghost) const {
             }
         }
 
+        // If there are multiple directions with the same manhattan distance just pick a random one
         if (!bestDirections.empty()) {
             return bestDirections[Random::getInstance().randomIndex(bestDirections.size())];
         }
@@ -630,6 +660,7 @@ Direction World::getNextFearedGhostDirection(const Ghost& ghost) const {
     if (possibleDirections.size() == 1)
         return possibleDirections[0];
 
+    // Get the largest manhattan distance(s) out of all possible directions
     int maxManhattanDistance = -1;
     std::vector<Direction> bestDirections;
 
@@ -653,6 +684,7 @@ Direction World::getNextFearedGhostDirection(const Ghost& ghost) const {
         }
     }
 
+    // If there are multiple directions with the same manhattan distance just pick a random one
     if (!bestDirections.empty()) {
         return bestDirections[Random::getInstance().randomIndex(bestDirections.size())];
     }
