@@ -10,7 +10,6 @@
 
 namespace application {
 
-// Initialises Score class to use a method to read the top 5 high scores
 MenuState::MenuState(StateManager& stateManager)
     : _stateManager(stateManager), _score(std::make_shared<logic::Score>()), _highScores(_score->getHighscores()) {}
 
@@ -30,7 +29,6 @@ void MenuState::handleEvent(const sf::Event& event) {
 
 void MenuState::update() {}
 
-// Renders title, high scores and play button
 void MenuState::render(sf::RenderWindow& window) {
     sf::Font font = ResourceLoader::getInstance().getFont();
 

@@ -10,9 +10,23 @@ namespace application {
  */
 class GameOverState : public State {
 public:
+    /**
+     * @brief Constructs a new GameOverState instance.
+     */
     explicit GameOverState(StateManager& stateManager);
+
+    /**
+     * @brief Handles player inputs
+     *
+     * Check for mouse clicks on "Restart Game" and "Main Menu" buttons.
+     */
     void handleEvent(const sf::Event& event) override;
+
     void update() override;
+
+    /**
+     * @brief Renders "Game Over" text, "Resume Game" and "Main Menu" buttons
+     */
     void render(sf::RenderWindow& window) override;
 
 private:

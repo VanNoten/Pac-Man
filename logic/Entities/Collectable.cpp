@@ -2,10 +2,9 @@
 
 namespace logic {
 
-Collectable::Collectable(float x, float y, float width, float height) : EntityModel(x, y, width, height) {}
+Collectable::Collectable(const float x, const float y, const float width, const float height)
+    : EntityModel(x, y, width, height) {}
 
 bool Collectable::isCollected() const { return _isCollected; }
-
-void Collectable::reset() { _isCollected = false; }
 
 } // namespace logic

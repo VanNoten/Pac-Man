@@ -5,8 +5,6 @@ namespace logic {
 Pacman::Pacman(float x, float y, float width, float height, int spawnTileX, int spawnTileY)
     : EntityModel(x, y, width, height), _spawnTileX(spawnTileX), _spawnTileY(spawnTileY) {}
 
-void Pacman::update(const float deltaTime) {}
-
 void Pacman::move(const float x, const float y) {
     _x += x;
     _y += y;

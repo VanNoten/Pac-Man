@@ -6,14 +6,41 @@
 
 namespace logic {
 
+/**
+ * @brief Base class for all game entities that provides position, size and a method to get the bounding box.
+ *
+ * The class has getters for position, width, height and bounding box for collision detection.
+ * The position (x, y) of an entity is the center of the entity.
+ *
+ * Implements the Observer/Subject design pattern.
+ */
 class EntityModel : public Subject {
 public:
     virtual ~EntityModel() = default;
-    virtual void update(float deltaTime) = 0;
+
+    /**
+     * @brief Returns the X coordinate of the entity.
+     */
     [[nodiscard]] float getX() const;
+
+    /**
+     * @brief Returns the Y coordinate of the entity.
+     */
     [[nodiscard]] float getY() const;
-    [[nodiscard]] virtual float getWidth() const;
-    [[nodiscard]] virtual float getHeight() const;
+
+    /**
+     * @brief Returns the width of the entity.
+     */
+    [[nodiscard]] float getWidth() const;
+
+    /**
+     * @brief Returns the height of the entity.
+     */
+    [[nodiscard]] float getHeight() const;
+
+    /**
+     * @brief Returns the bounding box of the entity.
+     */
     [[nodiscard]] Bounds getBounds() const;
 
 protected:

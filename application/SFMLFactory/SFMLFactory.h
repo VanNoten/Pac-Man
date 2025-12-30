@@ -24,11 +24,30 @@ public:
      */
     void setScoreObserver(const std::shared_ptr<logic::Observer>& observer);
 
+    /**
+     * @brief Creates a pacman entity, attaches score observer and PacmanView then returns a pointer to it.
+     */
     std::unique_ptr<logic::Pacman> createPacman(float x, float y, float width, float height, int spawnTileX,
                                                 int spawnTileY) override;
+
+    /**
+     * @brief Creates a wall entity, attaches WallView then returns a pointer to it.
+     */
     std::unique_ptr<logic::Wall> createWall(float x, float y, float width, float height) override;
+
+    /**
+     * @brief Creates a coin entity, attaches score observer and CoinView then returns a pointer to it.
+     */
     std::unique_ptr<logic::Coin> createCoin(float x, float y, float width, float height) override;
+
+    /**
+     * @brief Creates a fruit entity, attaches score observer and FruitView then returns a pointer to it.
+     */
     std::unique_ptr<logic::Fruit> createFruit(float x, float y, float width, float height) override;
+
+    /**
+     * @brief Creates a ghost entity, attaches GhostView then returns a pointer to it.
+     */
     std::unique_ptr<logic::Ghost> createGhost(float x, float y, float width, float height, int spawnTileX,
                                               int spawnTileY, logic::GhostType ghostType) override;
 

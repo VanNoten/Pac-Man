@@ -15,6 +15,8 @@ namespace logic {
  */
 class Subject {
 public:
+    virtual ~Subject() = default;
+
     /**
      * @brief Adds an observer to the subject.
      * @param observer Observer to add.

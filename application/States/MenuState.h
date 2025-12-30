@@ -16,9 +16,24 @@ namespace application {
  */
 class MenuState : public State {
 public:
+    /**
+     * @brief Constructs a new MenuState instance.
+     * Initialises Score class to use a method to read the top 5 high scores
+     */
     explicit MenuState(StateManager& stateManager);
+
+    /**
+     * @brief Handles player inputs
+     *
+     * Click on the play button or pressing Enter on keyboard both send the player to PlayingState.
+     */
     void handleEvent(const sf::Event& event) override;
+
     void update() override;
+
+    /**
+     * @brief Renders title, high scores and play button
+     */
     void render(sf::RenderWindow& window) override;
 
 private:

@@ -14,12 +14,24 @@ namespace application {
 class VictoryState : public State {
 public:
     /**
-     * @brief Constructor needs some information about the game state to continue to next level
+     * @brief Constructs a new VictoryState instance.
+     * Needs some information about the game state to continue to next level.
      */
     explicit VictoryState(StateManager& stateManager, std::shared_ptr<logic::Score> score, int livesLeft,
                           int currentLevel);
+
+    /**
+     * @brief Handles player inputs
+     *
+     * Check for mouse clicks on "Next Level" and "Main Menu" buttons.
+     */
     void handleEvent(const sf::Event& event) override;
+
     void update() override;
+
+    /**
+     * @brief Renders "Level Cleared" text, "Next Level" and "Main Menu" buttons
+     */
     void render(sf::RenderWindow& window) override;
 
 private:

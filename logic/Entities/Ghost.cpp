@@ -6,8 +6,6 @@ Ghost::Ghost(const float x, const float y, const float width, const float height
              const int spawnTileY, const GhostType ghostType)
     : EntityModel(x, y, width, height), _spawnTileX(spawnTileX), _spawnTileY(spawnTileY), _ghostType(ghostType) {}
 
-void Ghost::update(float deltaTime) {}
-
 void Ghost::move(const float x, const float y) {
     _x += x;
     _y += y;

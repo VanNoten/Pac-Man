@@ -33,8 +33,27 @@ public:
      */
     explicit PlayingState(StateManager& stateManager, std::shared_ptr<logic::Score> score, int livesLeft,
                           int currentLevel);
+
+    /**
+     * @brief Handles player inputs that move pacman
+     */
     void handleEvent(const sf::Event& event) override;
+
+    /**
+     * @brief Handles calling methods from world and score.
+     *
+     * If map hasn't been loaded yet call loadMap on world, attach the score observer to the world, get the views
+     * from the SFML factory and sort them by descending Z-level to ensure pacman and ghosts are drawn over other
+     * entities.
+     *
+     * When the map is loaded get deltaTime and pass it to world and score update methods. Then check the world state to
+     * determine if a state transition to GameOverState or VictoryState is needed.
+     */
     void update() override;
+
+    /**
+     * @brief Renders all entity views, score, lives left and current level.
+     */
     void render(sf::RenderWindow& window) override;
 
 private:
