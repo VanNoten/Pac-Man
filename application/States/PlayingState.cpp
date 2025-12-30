@@ -85,12 +85,14 @@ void PlayingState::update() {
 
     // Determine if state transition is needed
     if (_world->getIsGameOver()) {
-        _stateManager.pushState(std::make_unique<GameOverState>(_stateManager));
+        _stateManager.changeState(std::make_unique<GameOverState>(_stateManager));
+        return;
     }
 
     if (_world->getIsGameVictory()) {
         int livesLeft = _world->getPacmanLives();
-        _stateManager.pushState(std::make_unique<VictoryState>(_stateManager, _score, livesLeft, _currentLevel));
+        _stateManager.changeState(std::make_unique<VictoryState>(_stateManager, _score, livesLeft, _currentLevel));
+        return;
     }
 }
 

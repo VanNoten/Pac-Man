@@ -33,11 +33,6 @@ void GameOverState::update() {}
 void GameOverState::render(sf::RenderWindow& window) {
     sf::Font font = ResourceLoader::getInstance().getFont();
 
-    sf::RectangleShape backgroundRect({static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y)});
-    backgroundRect.setFillColor(sf::Color({0, 0, 0, 230}));
-    backgroundRect.setPosition({0, 0});
-    window.draw(backgroundRect);
-
     float centerX = window.getSize().x / 2.0f;
     float centerY = window.getSize().y / 2.0f;
 
