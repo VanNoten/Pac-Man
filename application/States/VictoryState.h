@@ -36,9 +36,10 @@ public:
 
 private:
     StateManager& _stateManager;
-    std::shared_ptr<logic::Score> _score;                  // Score that will be forwarded to the new PlayingState
-    int _livesLeft = logic::GameConstants::STARTING_LIVES; // Lives left that will be forwarded to the new PlayingState
-    int _currentLevel = 1; // Current level that will be forwarded to the new PlayingState
+    std::shared_ptr<logic::Score> _score; // Score that will be forwarded to the new PlayingState
+    int _livesLeft =
+        logic::util::GameConstants::STARTING_LIVES; // Lives left that will be forwarded to the new PlayingState
+    int _currentLevel = 1;                          // Current level that will be forwarded to the new PlayingState
     sf::FloatRect _nextLevelButtonBounds;
     sf::FloatRect _mainMenuButtonBounds;
 };

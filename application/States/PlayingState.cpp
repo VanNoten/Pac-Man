@@ -78,7 +78,7 @@ void PlayingState::update() {
         _mapLoaded = true;
     }
 
-    _deltaTime = static_cast<float>(logic::Stopwatch::getInstance().getDeltaTime());
+    _deltaTime = static_cast<float>(logic::util::Stopwatch::getInstance().getDeltaTime());
 
     _world->update(_deltaTime);
     _score->updateTick(_deltaTime);

@@ -14,14 +14,14 @@ namespace application {
  */
 class FruitView : public EntityView {
 public:
-    explicit FruitView(const logic::Fruit& fruit);
+    explicit FruitView(const logic::entities::Fruit& fruit);
     ~FruitView() override = default;
     void onNotify(logic::EventType event) override;
     void draw(sf::RenderWindow& window, const Camera& camera, float deltaTime) override;
     [[nodiscard]] int getZLevel() const override;
 
 private:
-    const logic::Fruit& _model;
+    const logic::entities::Fruit& _model;
     sf::Sprite _sprite;
 
     // Sprite layout constants

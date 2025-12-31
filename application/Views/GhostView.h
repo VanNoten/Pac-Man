@@ -15,7 +15,7 @@ namespace application {
  */
 class GhostView : public EntityView {
 public:
-    explicit GhostView(const logic::Ghost& ghost);
+    explicit GhostView(const logic::entities::Ghost& ghost);
     ~GhostView() override = default;
     void onNotify(logic::EventType event) override;
     void draw(sf::RenderWindow& window, const Camera& camera, float deltaTime) override;
@@ -29,7 +29,7 @@ private:
      */
     sf::IntRect getSpriteRect() const;
 
-    const logic::Ghost& _model;
+    const logic::entities::Ghost& _model;
     sf::Sprite _sprite;
     int _currentFrame = 0;
     float _animationTimer = 0.0f;

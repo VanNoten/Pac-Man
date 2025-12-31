@@ -13,14 +13,14 @@ namespace application {
  */
 class WallView : public EntityView {
 public:
-    explicit WallView(const logic::Wall& wall);
+    explicit WallView(const logic::entities::Wall& wall);
     ~WallView() override = default;
     void onNotify(logic::EventType event) override;
     void draw(sf::RenderWindow& window, const Camera& camera, float deltaTime) override;
     [[nodiscard]] int getZLevel() const override;
 
 private:
-    const logic::Wall& _model;
+    const logic::entities::Wall& _model;
     const int _zLevel = 0; // used for rendering order of entities
 };
 

@@ -1,6 +1,6 @@
 #include "Random.h"
 
-namespace logic {
+namespace logic::util {
 
 Random& Random::getInstance() {
     static Random instance;
@@ -21,4 +21,4 @@ int Random::randomIndex(const int n) {
 
 Random::Random() : _generator(_rd()) {}
 
-} // namespace logic
+} // namespace logic::util

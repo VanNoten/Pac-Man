@@ -4,7 +4,7 @@
 
 #include <Util/Constants.h>
 
-namespace logic {
+namespace logic::entities {
 
 /**
  * @brief Enumeration of ghost AI behavior types.
@@ -74,12 +74,12 @@ public:
      * @brief Sets the ghost's current movement direction.
      * @param direction The direction to set.
      */
-    void setDirection(Direction direction);
+    void setDirection(util::Direction direction);
 
     /**
      * @brief Returns the ghost's current movement direction.
      */
-    [[nodiscard]] Direction getDirection() const;
+    [[nodiscard]] util::Direction getDirection() const;
 
     /**
      * @brief Sets the tile coordinates where the ghost last made a direction decision.
@@ -140,18 +140,18 @@ public:
     [[nodiscard]] bool getIsActive() const;
 
 private:
-    Direction _direction = Direction::RIGHT;
+    util::Direction _direction = util::Direction::RIGHT;
     int _spawnTileX = 0;
     int _spawnTileY = 0;
     int _lastDecisionTileX = 0;
     int _lastDecisionTileY = 0;
-    float _speed = GameConstants::BASE_GHOST_SPEED;
-    float _fearedSpeed = GameConstants::BASE_FEARED_GHOST_SPEED;
+    float _speed = util::GameConstants::BASE_GHOST_SPEED;
+    float _fearedSpeed = util::GameConstants::BASE_FEARED_GHOST_SPEED;
     GhostType _ghostType;
     bool _isFeared = false;
     bool _isActive = false;
 };
 
-} // namespace logic
+} // namespace logic::entities
 
 #endif // GHOST_H

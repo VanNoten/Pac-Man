@@ -14,14 +14,14 @@ namespace application {
  */
 class CoinView : public EntityView {
 public:
-    explicit CoinView(const logic::Coin& coin);
+    explicit CoinView(const logic::entities::Coin& coin);
     ~CoinView() override = default;
     void onNotify(logic::EventType event) override;
     void draw(sf::RenderWindow& window, const Camera& camera, float deltaTime) override;
     [[nodiscard]] int getZLevel() const override;
 
 private:
-    const logic::Coin& _model;
+    const logic::entities::Coin& _model;
     sf::Sprite _sprite;
 
     // Sprite layout constants

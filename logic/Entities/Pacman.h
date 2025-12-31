@@ -5,7 +5,7 @@
 
 #include <Util/Constants.h>
 
-namespace logic {
+namespace logic::entities {
 
 /**
  * @brief Pacman entity that moves in the world collecting items and avoiding ghosts.
@@ -17,7 +17,7 @@ namespace logic {
  *
  * Movement:
  * - Pacman has a current direction and a wanted direction
- * - Direction changes happen at tile centers when the target tile is not a wall
+ * - util::Direction changes happen at tile centers when the target tile is not a wall
  * - Reverse direction changes are allowed instantly for better responsiveness
  * - Movement is continuous but direction decisions are tile-based (when close enough to tile center)
  */
@@ -57,12 +57,12 @@ public:
      * @brief Sets pacman's current movement direction.
      * @param direction The direction to set.
      */
-    void setDirection(Direction direction);
+    void setDirection(util::Direction direction);
 
     /**
      * @brief Returns pacman's current movement direction.
      */
-    [[nodiscard]] Direction getDirection() const;
+    [[nodiscard]] util::Direction getDirection() const;
 
     /**
      * @brief Sets pacman's wanted movement direction.
@@ -71,12 +71,12 @@ public:
      *
      * @param direction The wanted direction to set.
      */
-    void setWantedDirection(Direction direction);
+    void setWantedDirection(util::Direction direction);
 
     /**
      * @brief Returns pacman's wanted movement direction.
      */
-    [[nodiscard]] Direction getWantedDirection() const;
+    [[nodiscard]] util::Direction getWantedDirection() const;
 
     /**
      * @brief Returns the tile X coordinate where pacman spawns.
@@ -114,14 +114,14 @@ public:
     [[nodiscard]] int getLives() const;
 
 private:
-    Direction _direction = Direction::RIGHT;
-    Direction _wantedDirection = Direction::RIGHT;
+    util::Direction _direction = util::Direction::RIGHT;
+    util::Direction _wantedDirection = util::Direction::RIGHT;
     int _spawnTileX = 0;
     int _spawnTileY = 0;
-    float _speed = GameConstants::BASE_PACMAN_SPEED;
-    int _livesLeft = GameConstants::STARTING_LIVES;
+    float _speed = util::GameConstants::BASE_PACMAN_SPEED;
+    int _livesLeft = util::GameConstants::STARTING_LIVES;
 };
 
-} // namespace logic
+} // namespace logic::entities
 
 #endif // PACMAN_H

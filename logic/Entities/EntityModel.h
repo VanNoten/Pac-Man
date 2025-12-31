@@ -4,7 +4,7 @@
 
 #include <Observer/Subject.h>
 
-namespace logic {
+namespace logic::entities {
 
 /**
  * @brief Base class for all game entities that provides position, size and a method to get the bounding box.
@@ -41,7 +41,7 @@ public:
     /**
      * @brief Returns the bounding box of the entity.
      */
-    [[nodiscard]] Bounds getBounds() const;
+    [[nodiscard]] util::Bounds getBounds() const;
 
 protected:
     EntityModel(float x, float y, float width, float height);
@@ -51,6 +51,6 @@ protected:
     float _height = 0;
 };
 
-} // namespace logic
+} // namespace logic::entities
 
 #endif // ENTITYMODEL_H

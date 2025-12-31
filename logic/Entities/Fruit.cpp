@@ -1,6 +1,6 @@
 #include "Fruit.h"
 
-namespace logic {
+namespace logic::entities {
 
 Fruit::Fruit(float x, float y, float width, float height) : Collectable(x, y, width, height) {}
 
@@ -9,4 +9,4 @@ void Fruit::collect() {
     _isCollected = true;
 }
 
-} // namespace logic
+} // namespace logic::entities

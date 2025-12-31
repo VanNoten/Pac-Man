@@ -64,9 +64,9 @@ private:
     std::unique_ptr<Camera> _camera;      // Camera class to convert world coordinates to pixel coordinates
     std::unique_ptr<logic::World> _world; // Game logic controller that owns and manages all entities
     std::shared_ptr<logic::Score> _score; // Score class to track the score, forwarded to next PlayingState
-    int _livesLeft = logic::GameConstants::STARTING_LIVES; // Lives left, forwarded to next PlayingState
-    int _currentLevel = 1;                                 // Current level, forwarded to next PlayingState
-    bool _mapLoaded = false;                               // Flag to load map if it hasn't been loaded yet
+    int _livesLeft = logic::util::GameConstants::STARTING_LIVES; // Lives left, forwarded to next PlayingState
+    int _currentLevel = 1;                                       // Current level, forwarded to next PlayingState
+    bool _mapLoaded = false;                                     // Flag to load map if it hasn't been loaded yet
     float _deltaTime = 0.0f; // deltaTime is set in update() each frame, render() will use this value
 };
 

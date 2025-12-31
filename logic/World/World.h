@@ -79,7 +79,7 @@ public:
      * @param pacmanLives Initial number of lives for Pacman. Defaults to GameConstants::STARTING_LIVES.
      * @param currentLevel The level number being loaded. Defaults to 1.
      */
-    void loadMap(const std::vector<std::string>& map, int pacmanLives = GameConstants::STARTING_LIVES,
+    void loadMap(const std::vector<std::string>& map, int pacmanLives = util::GameConstants::STARTING_LIVES,
                  int currentLevel = 1);
 
     /**
@@ -122,7 +122,7 @@ private:
      * @param ghost Reference to the ghost to handle
      * @param deltaTime Time since the last update
      */
-    void handleGhostMovement(Ghost& ghost, float deltaTime) const;
+    void handleGhostMovement(entities::Ghost& ghost, float deltaTime) const;
 
     /**
      * @brief Activates ghosts based on their individual delay timers.
@@ -169,7 +169,7 @@ private:
      * @param B Second bounding box.
      * @return True if the bounding boxes overlap, false otherwise.
      */
-    [[nodiscard]] static bool isColliding(const Bounds& A, const Bounds& B);
+    [[nodiscard]] static bool isColliding(const util::Bounds& A, const util::Bounds& B);
 
     /**
      * @brief Converts a tile X coordinate to the world X coordinate of the tile center.
@@ -203,10 +203,10 @@ private:
      * @brief Gets the tile coordinates in the given direction from a starting tile.
      * @param tileX Starting tile X coordinate.
      * @param tileY Starting tile Y coordinate.
-     * @param direction Direction to move in.
+     * @param direction util::Direction to move in.
      * @return Pair of (tileX, tileY) coordinates in the given direction.
      */
-    [[nodiscard]] static std::pair<int, int> getTileInDirection(int tileX, int tileY, Direction direction);
+    [[nodiscard]] static std::pair<int, int> getTileInDirection(int tileX, int tileY, util::Direction direction);
 
     /**
      * @brief Checks if given tile is a wall.
@@ -232,7 +232,7 @@ private:
     /**
      * @brief Returns the opposite direction of the given direction.
      */
-    [[nodiscard]] static Direction getReverseDirection(Direction direction);
+    [[nodiscard]] static util::Direction getReverseDirection(util::Direction direction);
 
     /**
      * @brief Returns the possible directions a ghost can switch to.
@@ -241,7 +241,7 @@ private:
      *
      * @param ghost Reference to ghost
      */
-    [[nodiscard]] std::vector<Direction> getPossibleDirections(const Ghost& ghost) const;
+    [[nodiscard]] std::vector<util::Direction> getPossibleDirections(const entities::Ghost& ghost) const;
 
     /**
      * @brief Determines the next direction for a ghost based on its ghost type.
@@ -254,7 +254,7 @@ private:
      * @param ghost Reference to the ghost.
      * @return The direction the ghost should move next.
      */
-    [[nodiscard]] Direction getNextGhostDirection(const Ghost& ghost) const;
+    [[nodiscard]] util::Direction getNextGhostDirection(const entities::Ghost& ghost) const;
 
     /**
      * @brief Determines the next direction for a feared ghost.
@@ -264,17 +264,17 @@ private:
      * @param ghost Reference to the feared ghost.
      * @return The direction the ghost should move next.
      */
-    [[nodiscard]] Direction getNextFearedGhostDirection(const Ghost& ghost) const;
+    [[nodiscard]] util::Direction getNextFearedGhostDirection(const entities::Ghost& ghost) const;
 
     std::vector<std::string> _map = {};  // Vector of strings representing map layout
     float _originX, _originY, _cell = 0; // Coordinate system variables
     AbstractFactory& _factory;           // Factory for creating entities
 
-    std::vector<std::unique_ptr<Wall>> _walls;   // All wall entities
-    std::vector<std::unique_ptr<Coin>> _coins;   // All coin entities
-    std::vector<std::unique_ptr<Fruit>> _fruits; // All fruit entities
-    std::vector<std::unique_ptr<Ghost>> _ghosts; // All ghost entities
-    std::unique_ptr<Pacman> _pacman;             // Pacman entity
+    std::vector<std::unique_ptr<entities::Wall>> _walls;   // All wall entities
+    std::vector<std::unique_ptr<entities::Coin>> _coins;   // All coin entities
+    std::vector<std::unique_ptr<entities::Fruit>> _fruits; // All fruit entities
+    std::vector<std::unique_ptr<entities::Ghost>> _ghosts; // All ghost entities
+    std::unique_ptr<entities::Pacman> _pacman;             // Pacman entity
 
     float _fearedTimer = 0.0f; // Remaining time for feared mode
     bool _ghostsAreFeared = false;

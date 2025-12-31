@@ -4,7 +4,9 @@
 
 namespace application {
 
-WallView::WallView(const logic::Wall& wall) : _model(wall) {}
+using namespace logic::entities;
+
+WallView::WallView(const Wall& wall) : _model(wall) {}
 
 void WallView::onNotify(logic::EventType event) {}
 

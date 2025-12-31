@@ -8,6 +8,9 @@
 
 namespace logic {
 
+using namespace entities;
+using namespace util;
+
 World::World(AbstractFactory& factory) : _factory(factory) {}
 
 void World::handleAction(const Actions action) const {

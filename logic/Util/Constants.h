@@ -6,8 +6,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-namespace logic {
-namespace GameConstants {
+namespace logic::util::GameConstants {
 
 static constexpr std::string HIGHSCORES_FILE = "highscores.txt";
 
@@ -36,7 +35,6 @@ static constexpr int FRUIT_VALUE = 100;
 static constexpr int GHOST_VALUE = 200;
 static constexpr int LEVEL_CLEAR_VALUE = 500;
 
-} // namespace GameConstants
-} // namespace logic
+} // namespace logic::util::GameConstants
 
 #endif // CONSTANTS_H

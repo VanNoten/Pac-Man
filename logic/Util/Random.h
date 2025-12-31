@@ -2,7 +2,7 @@
 #define RANDOM_H
 #include <random>
 
-namespace logic {
+namespace logic::util {
 
 /**
  * @brief Singleton providing random number generation using Mersenne Twister.
@@ -50,6 +50,6 @@ private:
     std::mt19937 _generator;
 };
 
-} // namespace logic
+} // namespace logic::util
 
 #endif // RANDOM_H

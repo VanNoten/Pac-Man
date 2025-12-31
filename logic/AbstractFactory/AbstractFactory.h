@@ -18,13 +18,13 @@ namespace logic {
 class AbstractFactory {
 public:
     virtual ~AbstractFactory() = default;
-    virtual std::unique_ptr<Pacman> createPacman(float x, float y, float width, float height, int spawnTileX,
-                                                 int spawnTileY) = 0;
-    virtual std::unique_ptr<Wall> createWall(float x, float y, float width, float height) = 0;
-    virtual std::unique_ptr<Coin> createCoin(float x, float y, float width, float height) = 0;
-    virtual std::unique_ptr<Fruit> createFruit(float x, float y, float width, float height) = 0;
-    virtual std::unique_ptr<Ghost> createGhost(float x, float y, float width, float height, int spawnTileX,
-                                               int spawnTileY, GhostType ghostType) = 0;
+    virtual std::unique_ptr<entities::Pacman> createPacman(float x, float y, float width, float height, int spawnTileX,
+                                                           int spawnTileY) = 0;
+    virtual std::unique_ptr<entities::Wall> createWall(float x, float y, float width, float height) = 0;
+    virtual std::unique_ptr<entities::Coin> createCoin(float x, float y, float width, float height) = 0;
+    virtual std::unique_ptr<entities::Fruit> createFruit(float x, float y, float width, float height) = 0;
+    virtual std::unique_ptr<entities::Ghost> createGhost(float x, float y, float width, float height, int spawnTileX,
+                                                         int spawnTileY, entities::GhostType ghostType) = 0;
 };
 
 } // namespace logic

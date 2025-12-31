@@ -2,7 +2,7 @@
 #define COLLECTABLE_H
 #include "EntityModel.h"
 
-namespace logic {
+namespace logic::entities {
 
 /**
  * @brief Base class for collectable entities like Coins and Fruits

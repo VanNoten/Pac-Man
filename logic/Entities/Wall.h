@@ -2,7 +2,7 @@
 #define WALL_H
 #include "EntityModel.h"
 
-namespace logic {
+namespace logic::entities {
 
 /**
  * @brief Wall entity that is created when the map is loaded.
@@ -19,6 +19,6 @@ public:
     Wall(float x, float y, float width, float height);
 };
 
-} // namespace logic
+} // namespace logic::entities
 
 #endif // WALL_H

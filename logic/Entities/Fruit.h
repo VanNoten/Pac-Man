@@ -2,7 +2,7 @@
 #define FRUIT_H
 #include "Collectable.h"
 
-namespace logic {
+namespace logic::entities {
 
 /**
  * @brief Collectable fruit entity that can be collected by pacman for points and fears ghosts.
@@ -27,6 +27,6 @@ public:
     void collect() override;
 };
 
-} // namespace logic
+} // namespace logic::entities
 
 #endif // FRUIT_H

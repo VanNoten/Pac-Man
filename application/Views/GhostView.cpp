@@ -5,7 +5,10 @@
 
 namespace application {
 
-GhostView::GhostView(const logic::Ghost& ghost) : _model(ghost) {
+using namespace logic::entities;
+using namespace logic::util;
+
+GhostView::GhostView(const Ghost& ghost) : _model(ghost) {
     const sf::Texture& texture = ResourceLoader::getInstance().getSpriteSheet();
     _sprite.setTexture(texture);
 }
@@ -42,21 +45,21 @@ sf::IntRect GhostView::getSpriteRect() const {
         return {X_OFFSET_FEARED, y, SPRITE_SIZE, SPRITE_SIZE};
     }
 
-    const logic::GhostType ghostType = _model.getGhostType();
+    const GhostType ghostType = _model.getGhostType();
     const Direction direction = _model.getDirection();
     int x = X_OFFSET;
     int y = Y_OFFSET;
 
     switch (ghostType) {
-    case logic::GhostType::Chaser:
+    case GhostType::Chaser:
         break;
-    case logic::GhostType::AheadChaser1:
+    case GhostType::AheadChaser1:
         x += SPRITE_SIZE + PIXELS_BETWEEN;
         break;
-    case logic::GhostType::AheadChaser2:
+    case GhostType::AheadChaser2:
         x += 2 * (SPRITE_SIZE + PIXELS_BETWEEN);
         break;
-    case logic::GhostType::Locked:
+    case GhostType::Locked:
         x += 3 * (SPRITE_SIZE + PIXELS_BETWEEN);
         break;
     }

@@ -1,6 +1,8 @@
 #include "Pacman.h"
 
-namespace logic {
+namespace logic::entities {
+
+using namespace logic::util;
 
 Pacman::Pacman(float x, float y, float width, float height, int spawnTileX, int spawnTileY)
     : EntityModel(x, y, width, height), _spawnTileX(spawnTileX), _spawnTileY(spawnTileY) {}
@@ -37,4 +39,4 @@ void Pacman::setLives(const int lives) { _livesLeft = lives; }
 
 int Pacman::getLives() const { return _livesLeft; }
 
-} // namespace logic
+} // namespace logic::entities

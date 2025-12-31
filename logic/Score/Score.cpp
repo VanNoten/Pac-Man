@@ -7,6 +7,8 @@
 
 namespace logic {
 
+using namespace logic::util;
+
 Score::Score() { loadHighscores(); }
 
 void Score::onNotify(EventType event) {

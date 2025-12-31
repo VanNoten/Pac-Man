@@ -1,6 +1,6 @@
 #include "Stopwatch.h"
 
-namespace logic {
+namespace logic::util {
 
 Stopwatch& Stopwatch::getInstance() {
     static Stopwatch instance;
@@ -16,4 +16,4 @@ double Stopwatch::getDeltaTime() {
 
 Stopwatch::Stopwatch() { _lastTime = std::chrono::steady_clock::now(); }
 
-} // namespace logic
+} // namespace logic::util

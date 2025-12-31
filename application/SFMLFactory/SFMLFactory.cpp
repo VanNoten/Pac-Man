@@ -8,14 +8,15 @@
 
 namespace application {
 
+using namespace logic::entities;
+
 std::vector<std::shared_ptr<EntityView>> SFMLFactory::getViews() const { return _views; }
 
 void SFMLFactory::setScoreObserver(const std::shared_ptr<logic::Observer>& observer) { _scoreObserver = observer; }
 
-std::unique_ptr<logic::Pacman> SFMLFactory::createPacman(float x, float y, float width, float height, int spawnTileX,
-                                                         int spawnTileY) {
-    std::unique_ptr<logic::Pacman> pacman =
-        std::make_unique<logic::Pacman>(x, y, width, height, spawnTileX, spawnTileY);
+std::unique_ptr<Pacman> SFMLFactory::createPacman(float x, float y, float width, float height, int spawnTileX,
+                                                  int spawnTileY) {
+    std::unique_ptr<Pacman> pacman = std::make_unique<Pacman>(x, y, width, height, spawnTileX, spawnTileY);
 
     if (_scoreObserver)
         pacman->addObserver(_scoreObserver);
@@ -27,8 +28,8 @@ std::unique_ptr<logic::Pacman> SFMLFactory::createPacman(float x, float y, float
     return pacman;
 }
 
-std::unique_ptr<logic::Wall> SFMLFactory::createWall(float x, float y, float width, float height) {
-    std::unique_ptr<logic::Wall> wall = std::make_unique<logic::Wall>(x, y, width, height);
+std::unique_ptr<Wall> SFMLFactory::createWall(float x, float y, float width, float height) {
+    std::unique_ptr<Wall> wall = std::make_unique<Wall>(x, y, width, height);
 
     const std::shared_ptr<WallView> view = std::make_shared<WallView>(*wall);
     _views.push_back(view);
@@ -37,8 +38,8 @@ std::unique_ptr<logic::Wall> SFMLFactory::createWall(float x, float y, float wid
     return wall;
 }
 
-std::unique_ptr<logic::Coin> SFMLFactory::createCoin(float x, float y, float width, float height) {
-    std::unique_ptr<logic::Coin> coin = std::make_unique<logic::Coin>(x, y, width, height);
+std::unique_ptr<Coin> SFMLFactory::createCoin(float x, float y, float width, float height) {
+    std::unique_ptr<Coin> coin = std::make_unique<Coin>(x, y, width, height);
 
     if (_scoreObserver)
         coin->addObserver(_scoreObserver);
@@ -50,8 +51,8 @@ std::unique_ptr<logic::Coin> SFMLFactory::createCoin(float x, float y, float wid
     return coin;
 }
 
-std::unique_ptr<logic::Fruit> SFMLFactory::createFruit(float x, float y, float width, float height) {
-    std::unique_ptr<logic::Fruit> fruit = std::make_unique<logic::Fruit>(x, y, width, height);
+std::unique_ptr<Fruit> SFMLFactory::createFruit(float x, float y, float width, float height) {
+    std::unique_ptr<Fruit> fruit = std::make_unique<Fruit>(x, y, width, height);
 
     if (_scoreObserver)
         fruit->addObserver(_scoreObserver);
@@ -63,10 +64,9 @@ std::unique_ptr<logic::Fruit> SFMLFactory::createFruit(float x, float y, float w
     return fruit;
 }
 
-std::unique_ptr<logic::Ghost> SFMLFactory::createGhost(float x, float y, float width, float height, int spawnTileX,
-                                                       int spawnTileY, logic::GhostType ghostType) {
-    std::unique_ptr<logic::Ghost> ghost =
-        std::make_unique<logic::Ghost>(x, y, width, height, spawnTileX, spawnTileY, ghostType);
+std::unique_ptr<Ghost> SFMLFactory::createGhost(float x, float y, float width, float height, int spawnTileX,
+                                                int spawnTileY, GhostType ghostType) {
+    std::unique_ptr<Ghost> ghost = std::make_unique<Ghost>(x, y, width, height, spawnTileX, spawnTileY, ghostType);
 
     const std::shared_ptr<GhostView> view = std::make_shared<GhostView>(*ghost);
     _views.push_back(view);

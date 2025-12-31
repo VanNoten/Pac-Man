@@ -6,7 +6,10 @@
 
 namespace application {
 
-PacmanView::PacmanView(const logic::Pacman& pacman) : _model(pacman) {
+using namespace logic::entities;
+using namespace logic::util;
+
+PacmanView::PacmanView(const Pacman& pacman) : _model(pacman) {
     const sf::Texture& texture = ResourceLoader::getInstance().getSpriteSheet();
     _sprite.setTexture(texture);
 }

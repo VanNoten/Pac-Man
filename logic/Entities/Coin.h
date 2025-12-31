@@ -2,7 +2,7 @@
 #define COIN_H
 #include "Collectable.h"
 
-namespace logic {
+namespace logic::entities {
 
 /**
  * @brief Collectable coin entity that can be collected by pacman for points.
@@ -27,6 +27,6 @@ public:
     void collect() override;
 };
 
-} // namespace logic
+} // namespace logic::entities
 
 #endif // COIN_H

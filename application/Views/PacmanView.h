@@ -15,7 +15,7 @@ namespace application {
  */
 class PacmanView : public EntityView {
 public:
-    explicit PacmanView(const logic::Pacman& pacman);
+    explicit PacmanView(const logic::entities::Pacman& pacman);
     ~PacmanView() override = default;
     void onNotify(logic::EventType event) override;
     void draw(sf::RenderWindow& window, const Camera& camera, float deltaTime) override;
@@ -28,7 +28,7 @@ private:
      */
     sf::IntRect getSpriteRect() const;
 
-    const logic::Pacman& _model;
+    const logic::entities::Pacman& _model;
     sf::Sprite _sprite;
     int _currentFrame = 0;
     float _animationTimer = 0.0f;

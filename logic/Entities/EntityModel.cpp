@@ -1,8 +1,8 @@
 #include "EntityModel.h"
 
-namespace logic {
+namespace logic::entities {
 
-Bounds EntityModel::getBounds() const {
+util::Bounds EntityModel::getBounds() const {
     const float halfWidth = _width / 2.0f;
     const float halfHeight = _height / 2.0f;
 
@@ -20,4 +20,4 @@ float EntityModel::getHeight() const { return _height; }
 EntityModel::EntityModel(const float x, const float y, const float width, const float height)
     : _x(x), _y(y), _width(width), _height(height) {}
 
-} // namespace logic
+} // namespace logic::entities

@@ -1,7 +1,7 @@
 #include "Wall.h"
 
-namespace logic {
+namespace logic::entities {
 
 Wall::Wall(const float x, const float y, const float width, const float height) : EntityModel(x, y, width, height) {}
 
-} // namespace logic
+} // namespace logic::entities

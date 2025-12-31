@@ -1,6 +1,8 @@
 #include "Ghost.h"
 
-namespace logic {
+namespace logic::entities {
+
+using namespace logic::util;
 
 Ghost::Ghost(const float x, const float y, const float width, const float height, const int spawnTileX,
              const int spawnTileY, const GhostType ghostType)
@@ -55,4 +57,4 @@ void Ghost::setActive(const bool status) { _isActive = status; }
 
 bool Ghost::getIsActive() const { return _isActive; }
 
-} // namespace logic
+} // namespace logic::entities

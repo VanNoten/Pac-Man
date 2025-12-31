@@ -2,7 +2,7 @@
 #define STOPWATCH_H
 #include <chrono>
 
-namespace logic {
+namespace logic::util {
 
 /**
  * @brief Singleton providing a method to get deltaTime
@@ -36,6 +36,6 @@ private:
     std::chrono::steady_clock::time_point _lastTime;
 };
 
-} // namespace logic
+} // namespace logic::util
 
 #endif // STOPWATCH_H

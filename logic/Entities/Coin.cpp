@@ -1,6 +1,6 @@
 #include "Coin.h"
 
-namespace logic {
+namespace logic::entities {
 
 Coin::Coin(float x, float y, float width, float height) : Collectable(x, y, width, height) {}
 
@@ -9,4 +9,4 @@ void Coin::collect() {
     _isCollected = true;
 }
 
-} // namespace logic
+} // namespace logic::entities
