@@ -6,7 +6,7 @@ namespace sf {
 class Event;
 }
 
-namespace application {
+namespace application::states {
 
 /**
  * @brief Abstract base class for states
@@ -35,6 +35,6 @@ public:
     virtual void render(sf::RenderWindow& window) = 0;
 };
 
-} // namespace application
+} // namespace application::states
 
 #endif // STATE_H

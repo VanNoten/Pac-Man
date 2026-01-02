@@ -7,7 +7,7 @@
 namespace application {
 
 Game::Game() : _window(sf::VideoMode(1024, 768), "Pac-Man") {
-    _stateManager.changeState(std::make_unique<MenuState>(_stateManager));
+    _stateManager.changeState(std::make_unique<states::MenuState>(_stateManager));
 }
 void Game::run() {
     while (_window.isOpen()) {

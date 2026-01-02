@@ -7,7 +7,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Event.hpp>
 
-namespace application {
+namespace application::states {
 
 PausedState::PausedState(StateManager& stateManager) : _stateManager(stateManager) {}
 
@@ -95,4 +95,4 @@ void PausedState::render(sf::RenderWindow& window) {
     window.draw(mainMenuText);
 }
 
-} // namespace application
+} // namespace application::states

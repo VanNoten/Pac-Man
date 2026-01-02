@@ -8,7 +8,7 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
-namespace application {
+namespace application::states {
 
 MenuState::MenuState(StateManager& stateManager)
     : _stateManager(stateManager), _score(std::make_shared<logic::Score>()), _highScores(_score->getHighscores()) {}
@@ -98,4 +98,4 @@ void MenuState::render(sf::RenderWindow& window) {
     window.draw(playText);
 }
 
-} // namespace application
+} // namespace application::states

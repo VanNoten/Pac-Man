@@ -8,7 +8,7 @@
 #include <SFMLFactory/SFMLFactory.h>
 #include <Score/Score.h>
 
-namespace application {
+namespace application::states {
 
 /**
  * @brief Playing state representing gameplay where the player controls Pac-Man.
@@ -70,6 +70,6 @@ private:
     float _deltaTime = 0.0f; // deltaTime is set in update() each frame, render() will use this value
 };
 
-} // namespace application
+} // namespace application::states
 
 #endif // PLAYINGSTATE_H

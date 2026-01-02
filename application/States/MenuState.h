@@ -6,7 +6,7 @@
 
 #include <Score/Score.h>
 
-namespace application {
+namespace application::states {
 
 /**
  * @brief Menu state showing title of the game, previous high scores and a play button
@@ -43,6 +43,6 @@ private:
     sf::FloatRect _playButtonBounds; // Bounds for the play button to check if player clicked on it
 };
 
-} // namespace application
+} // namespace application::states
 
 #endif // MENUSTATE_H

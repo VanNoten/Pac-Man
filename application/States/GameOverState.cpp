@@ -9,7 +9,7 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Mouse.hpp>
 
-namespace application {
+namespace application::states {
 
 GameOverState::GameOverState(StateManager& stateManager) : _stateManager(stateManager) {}
 
@@ -102,4 +102,4 @@ void GameOverState::render(sf::RenderWindow& window) {
     window.draw(mainMenuText);
 }
 
-} // namespace application
+} // namespace application::states

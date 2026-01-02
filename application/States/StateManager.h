@@ -11,7 +11,7 @@ class Event;
 class RenderWindow;
 } // namespace sf
 
-namespace application {
+namespace application::states {
 
 /**
  * @brief Manages game states using a state stack.
@@ -63,6 +63,6 @@ private:
     std::stack<std::unique_ptr<State>> _states;
 };
 
-} // namespace application
+} // namespace application::states
 
 #endif // STATEMANAGER_H

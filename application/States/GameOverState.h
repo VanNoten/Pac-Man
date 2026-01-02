@@ -3,7 +3,7 @@
 #include "State.h"
 #include "StateManager.h"
 
-namespace application {
+namespace application::states {
 
 /**
  * @brief Game over state showing a button to restart game and a button to return to MenuState
@@ -35,6 +35,6 @@ private:
     sf::FloatRect _mainMenuButtonBounds;
 };
 
-} // namespace application
+} // namespace application::states
 
 #endif // GAMEOVERSTATE_H

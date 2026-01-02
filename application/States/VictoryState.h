@@ -6,7 +6,7 @@
 #include <Score/Score.h>
 #include <Util/Constants.h>
 
-namespace application {
+namespace application::states {
 
 /**
  * @brief Victory state showing a button to continue to next level and a button to return to MenuState
@@ -44,6 +44,6 @@ private:
     sf::FloatRect _mainMenuButtonBounds;
 };
 
-} // namespace application
+} // namespace application::states
 
 #endif // VICTORYSTATE_H

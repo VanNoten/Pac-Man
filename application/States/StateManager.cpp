@@ -1,6 +1,6 @@
 #include "StateManager.h"
 
-namespace application {
+namespace application::states {
 
 void StateManager::changeState(std::unique_ptr<State>&& state) {
     while (!_states.empty()) {
@@ -31,4 +31,4 @@ void StateManager::render(sf::RenderWindow& window) const {
         _states.top()->render(window);
 }
 
-} // namespace application
+} // namespace application::states

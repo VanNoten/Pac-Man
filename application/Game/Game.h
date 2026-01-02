@@ -29,7 +29,7 @@ public:
 
 private:
     sf::RenderWindow _window;
-    StateManager _stateManager;
+    states::StateManager _stateManager;
 };
 
 } // namespace application

@@ -9,7 +9,7 @@
 #include <SFML/Window/Event.hpp>
 #include <utility>
 
-namespace application {
+namespace application::states {
 
 VictoryState::VictoryState(StateManager& stateManager, std::shared_ptr<logic::Score> score, const int livesLeft,
                            const int currentLevel)
@@ -106,4 +106,4 @@ void VictoryState::render(sf::RenderWindow& window) {
     window.draw(mainMenuText);
 }
 
-} // namespace application
+} // namespace application::states

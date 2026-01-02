@@ -15,7 +15,7 @@
 #include <Util/Stopwatch.h>
 #include <utility>
 
-namespace application {
+namespace application::states {
 
 PlayingState::PlayingState(StateManager& stateManager)
     : _stateManager(stateManager), _score(std::make_shared<logic::Score>()) {
@@ -132,4 +132,4 @@ void PlayingState::render(sf::RenderWindow& window) {
     window.draw(levelText);
 }
 
-} // namespace application
+} // namespace application::states
