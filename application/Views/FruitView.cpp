@@ -7,22 +7,27 @@ namespace application {
 
 using namespace logic::entities;
 
-FruitView::FruitView(const Fruit& fruit) : _model(fruit) {
+FruitView::FruitView(const Fruit& fruit)
+    : _model(fruit), _x(fruit.getX()), _y(fruit.getY()), _width(fruit.getWidth()), _isCollected(fruit.isCollected()) {
     const sf::Texture& texture = ResourceLoader::getInstance().getSpriteSheet();
     _sprite.setTexture(texture);
     _sprite.setTextureRect(_spriteRect);
 }
 
-void FruitView::onNotify(logic::EventType event) {}
+void FruitView::onNotify(const logic::EventType event) {
+    if (event == logic::EventType::FruitCollected) {
+        _isCollected = true;
+    }
+}
 
 void FruitView::draw(sf::RenderWindow& window, const Camera& camera, float deltaTime) {
-    if (_model.isCollected())
+    if (_isCollected)
         return;
 
     float screenX;
     float screenY;
-    camera.worldToScreen(_model.getX(), _model.getY(), screenX, screenY);
-    const float radius = camera.worldToScreenSize(_model.getWidth() * 0.5f);
+    camera.worldToScreen(_x, _y, screenX, screenY);
+    const float radius = camera.worldToScreenSize(_width * 0.5f);
 
     const float scale = (radius * 2.0f) / SPRITE_SIZE;
     _sprite.setScale(scale, scale);

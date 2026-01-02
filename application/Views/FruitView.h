@@ -24,6 +24,11 @@ private:
     const logic::entities::Fruit& _model;
     sf::Sprite _sprite;
 
+    float _x = 0.0f;
+    float _y = 0.0f;
+    float _width = 0.0f;
+    bool _isCollected = false;
+
     // Sprite layout constants
     static constexpr int SPRITE_SIZE = 36; // size in pixels of fruit
     static constexpr int X_OFFSET = 601;   // x offset pixels on spritesheet

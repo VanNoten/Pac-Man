@@ -4,6 +4,7 @@
 #include "SFML/Graphics/Sprite.hpp"
 #include <Entities/Pacman.h>
 #include <Views/EntityView.h>
+#include <array>
 
 namespace application {
 
@@ -23,15 +24,32 @@ public:
 
 private:
     /**
-     * @brief Returns the correct sprite rectangle based on direction and current animation frame.
-     * @return Sprite rectangle that needs to be rendered
+     * @brief Calculates all sprite rectangles for each direction and animation frame.
+     *
+     * Called once in constructor to avoid recalculating sprite positions every frame.
      */
-    sf::IntRect getSpriteRect() const;
+    void initializeSpriteRects();
+
+    /**
+     * @brief Updates the sprite's texture rectangle based on current direction and animation frame.
+     *
+     * Called when direction changes or animation frame changes.
+     */
+    void updateSpriteRect();
 
     const logic::entities::Pacman& _model;
     sf::Sprite _sprite;
     int _currentFrame = 0;
     float _animationTimer = 0.0f;
+
+    float _x = 0.0f;
+    float _y = 0.0f;
+    float _width = 0.0f;
+    int _directionIndex = 0;
+
+    static constexpr int NUM_DIRECTIONS = 4;
+    static constexpr int NUM_FRAMES = 3; // pacman has 3 frames for the animation
+    std::array<std::array<sf::IntRect, NUM_FRAMES>, NUM_DIRECTIONS> _spriteRects;
 
     // Sprite layout constants
     static constexpr float ANIMATION_SPEED = 0.15f; // amount of seconds a frame lasts before switching

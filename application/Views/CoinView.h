@@ -24,6 +24,11 @@ private:
     const logic::entities::Coin& _model;
     sf::Sprite _sprite;
 
+    float _x = 0.0f;
+    float _y = 0.0f;
+    float _width = 0.0f;
+    bool _isCollected = false;
+
     // Sprite layout constants
     static constexpr int SPRITE_SIZE = 16; // size in pixels of coin
     static constexpr int X_OFFSET = 411;   // x offset pixels on spritesheet

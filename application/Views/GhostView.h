@@ -4,6 +4,7 @@
 #include <Entities/Ghost.h>
 #include <SFML/Graphics/Sprite.hpp>
 #include <Views/EntityView.h>
+#include <array>
 
 namespace application {
 
@@ -23,16 +24,34 @@ public:
 
 private:
     /**
-     * @brief Returns the correct sprite rectangle based on direction, if ghost is feared or not and current
-     * animation frame.
-     * @return Sprite rectangle that needs to be rendered
+     * @brief Calculates all sprite rectangles for each direction, animation frame, and feared mode.
+     *
+     * Called once in constructor to avoid recalculating sprite positions every frame.
      */
-    sf::IntRect getSpriteRect() const;
+    void initializeSpriteRects();
+
+    /**
+     * @brief Updates the sprite's texture rectangle based on current direction, feared mode, and animation frame.
+     *
+     * Called when direction changes, feared mode changes, or animation frame changes.
+     */
+    void updateSpriteRect();
 
     const logic::entities::Ghost& _model;
     sf::Sprite _sprite;
     int _currentFrame = 0;
     float _animationTimer = 0.0f;
+
+    float _x = 0.0f;
+    float _y = 0.0f;
+    float _width = 0.0f;
+    int _directionIndex = 0;
+    bool _isFeared = false;
+
+    static constexpr int NUM_DIRECTIONS = 4;
+    static constexpr int NUM_FRAMES = 2; // ghosts have 2 frames for the animation
+    std::array<std::array<sf::IntRect, NUM_FRAMES>, NUM_DIRECTIONS> _normalSpriteRects;
+    std::array<sf::IntRect, NUM_FRAMES> _fearedSpriteRects;
 
     // Sprite layout constants
     static constexpr float ANIMATION_SPEED = 0.3f; // amount of seconds a frame lasts before switching

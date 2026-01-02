@@ -10,6 +10,7 @@ Pacman::Pacman(float x, float y, float width, float height, int spawnTileX, int 
 void Pacman::move(const float x, const float y) {
     _x += x;
     _y += y;
+    notify(EventType::Move);
 }
 
 void Pacman::setPosition(const float x, const float y) {
@@ -19,7 +20,12 @@ void Pacman::setPosition(const float x, const float y) {
 
 float Pacman::getSpeed() const { return _speed; }
 
-void Pacman::setDirection(const Direction direction) { _direction = direction; }
+void Pacman::setDirection(const Direction direction) {
+    if (_direction != direction) {
+        _direction = direction;
+        notify(EventType::DirectionChanged);
+    }
+}
 
 Direction Pacman::getDirection() const { return _direction; }
 

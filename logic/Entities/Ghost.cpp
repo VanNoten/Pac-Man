@@ -11,6 +11,7 @@ Ghost::Ghost(const float x, const float y, const float width, const float height
 void Ghost::move(const float x, const float y) {
     _x += x;
     _y += y;
+    notify(EventType::Move);
 }
 
 void Ghost::setPosition(const float x, const float y) {
@@ -32,7 +33,12 @@ float Ghost::getSpeed() const {
 
 GhostType Ghost::getGhostType() const { return _ghostType; }
 
-void Ghost::setDirection(const Direction direction) { _direction = direction; }
+void Ghost::setDirection(const Direction direction) {
+    if (_direction != direction) {
+        _direction = direction;
+        notify(EventType::DirectionChanged);
+    }
+}
 
 Direction Ghost::getDirection() const { return _direction; }
 
@@ -49,7 +55,12 @@ int Ghost::getSpawnTileX() const { return _spawnTileX; }
 
 int Ghost::getSpawnTileY() const { return _spawnTileY; }
 
-void Ghost::setIsFeared(const bool status) { _isFeared = status; }
+void Ghost::setIsFeared(const bool status) {
+    if (_isFeared != status) {
+        _isFeared = status;
+        notify(EventType::FearedModeChanged);
+    }
+}
 
 bool Ghost::getIsFeared() const { return _isFeared; }
 
