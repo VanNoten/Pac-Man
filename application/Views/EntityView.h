@@ -5,7 +5,7 @@
 #include <Observer/Observer.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 
-namespace application {
+namespace application::views {
 
 /**
  * @brief Abstract base class for rendering the entity models using SFML.
@@ -35,6 +35,6 @@ public:
     [[nodiscard]] virtual int getZLevel() const = 0;
 };
 
-} // namespace application
+} // namespace application::views
 
 #endif // ENTITYVIEW_H

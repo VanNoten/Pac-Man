@@ -7,7 +7,6 @@
 
 #include <Camera/Camera.h>
 #include <Resources/ResourceLoader.h>
-#include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -71,7 +70,7 @@ void PlayingState::update() {
         _views = _sfmlFactory.getViews();
         // sort the views based off of z-level (so lower z-levels get rendered first) using lambda comparator
         std::sort(_views.begin(), _views.end(),
-                  [](const std::shared_ptr<EntityView>& a, const std::shared_ptr<EntityView>& b) {
+                  [](const std::shared_ptr<views::EntityView>& a, const std::shared_ptr<views::EntityView>& b) {
                       return a->getZLevel() < b->getZLevel();
                   });
 

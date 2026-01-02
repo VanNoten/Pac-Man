@@ -3,7 +3,7 @@
 #include <Resources/ResourceLoader.h>
 #include <SFML/Graphics/CircleShape.hpp>
 
-namespace application {
+namespace application::views {
 
 using namespace logic::entities;
 using namespace logic::util;
@@ -101,4 +101,4 @@ void GhostView::draw(sf::RenderWindow& window, const Camera& camera, const float
 
 int GhostView::getZLevel() const { return _zLevel; }
 
-} // namespace application
+} // namespace application::views

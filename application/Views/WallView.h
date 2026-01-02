@@ -4,7 +4,7 @@
 #include <Entities/Wall.h>
 #include <Views/EntityView.h>
 
-namespace application {
+namespace application::views {
 
 /**
  * @brief Renders Wall entities as blue rectangles
@@ -24,6 +24,6 @@ private:
     const int _zLevel = 0; // used for rendering order of entities
 };
 
-} // namespace application
+} // namespace application::views
 
 #endif // WALLVIEW_H

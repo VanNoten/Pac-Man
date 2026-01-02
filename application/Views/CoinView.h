@@ -5,7 +5,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <Views/EntityView.h>
 
-namespace application {
+namespace application::views {
 
 /**
  * @brief Renders Coin entities
@@ -39,6 +39,6 @@ private:
     const int _zLevel = 0; // used for rendering order of entities
 };
 
-} // namespace application
+} // namespace application::views
 
 #endif // COINVIEW_H

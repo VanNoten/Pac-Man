@@ -9,6 +9,7 @@
 namespace application {
 
 using namespace logic::entities;
+using namespace application::views;
 
 std::vector<std::shared_ptr<EntityView>> SFMLFactory::getViews() const { return _views; }
 

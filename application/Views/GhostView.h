@@ -6,7 +6,7 @@
 #include <Views/EntityView.h>
 #include <array>
 
-namespace application {
+namespace application::views {
 
 /**
  * @brief Renders Ghost entity with animation, changing directions and feared mode.
@@ -65,6 +65,6 @@ private:
     const int _zLevel = 1; // used for rendering order of entities
 };
 
-} // namespace application
+} // namespace application::views
 
 #endif // GHOSTVIEW_H

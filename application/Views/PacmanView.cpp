@@ -4,7 +4,7 @@
 #include <SFML/Graphics/CircleShape.hpp>
 #include <Util/Stopwatch.h>
 
-namespace application {
+namespace application::views {
 
 using namespace logic::entities;
 using namespace logic::util;
@@ -73,4 +73,4 @@ void PacmanView::draw(sf::RenderWindow& window, const Camera& camera, const floa
 
 int PacmanView::getZLevel() const { return _zLevel; }
 
-} // namespace application
+} // namespace application::views

@@ -3,7 +3,7 @@
 #include <Resources/ResourceLoader.h>
 #include <SFML/Graphics/CircleShape.hpp>
 
-namespace application {
+namespace application::views {
 
 using namespace logic::entities;
 
@@ -38,4 +38,4 @@ void FruitView::draw(sf::RenderWindow& window, const Camera& camera, float delta
 
 int FruitView::getZLevel() const { return _zLevel; }
 
-} // namespace application
+} // namespace application::views

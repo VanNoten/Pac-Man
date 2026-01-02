@@ -6,7 +6,7 @@
 #include <Views/EntityView.h>
 #include <array>
 
-namespace application {
+namespace application::views {
 
 /**
  * @brief Renders Pacman entity with mouth animation and changing directions.
@@ -61,6 +61,6 @@ private:
     const int _zLevel = 1; // used for rendering order of entities
 };
 
-} // namespace application
+} // namespace application::views
 
 #endif // PACMANVIEW_H

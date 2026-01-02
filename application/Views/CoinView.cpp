@@ -3,7 +3,7 @@
 #include <Resources/ResourceLoader.h>
 #include <SFML/Graphics/CircleShape.hpp>
 
-namespace application {
+namespace application::views {
 
 using namespace logic::entities;
 
@@ -38,4 +38,4 @@ void CoinView::draw(sf::RenderWindow& window, const Camera& camera, float deltaT
 
 int CoinView::getZLevel() const { return _zLevel; }
 
-} // namespace application
+} // namespace application::views

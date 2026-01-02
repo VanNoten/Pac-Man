@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics/RectangleShape.hpp>
 
-namespace application {
+namespace application::views {
 
 using namespace logic::entities;
 
@@ -25,4 +25,4 @@ void WallView::draw(sf::RenderWindow& window, const Camera& camera, float deltaT
 
 int WallView::getZLevel() const { return _zLevel; }
 
-} // namespace application
+} // namespace application::views

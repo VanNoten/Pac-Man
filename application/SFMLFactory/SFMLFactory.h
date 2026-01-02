@@ -16,7 +16,7 @@ public:
     /**
      * @brief Returns all entity views.
      */
-    [[nodiscard]] std::vector<std::shared_ptr<EntityView>> getViews() const;
+    [[nodiscard]] std::vector<std::shared_ptr<views::EntityView>> getViews() const;
 
     /**
      * @brief Sets score observer variable so it can be attached to entities that need it.
@@ -52,7 +52,7 @@ public:
                                                         int spawnTileY, logic::entities::GhostType ghostType) override;
 
 private:
-    std::vector<std::shared_ptr<EntityView>> _views;
+    std::vector<std::shared_ptr<views::EntityView>> _views;
 
     std::shared_ptr<logic::Observer> _scoreObserver;
 };

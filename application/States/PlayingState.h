@@ -60,7 +60,7 @@ private:
     StateManager& _stateManager;
     SFMLFactory
         _sfmlFactory; // Concrete factory that the world class uses to create entities and attach observers and views
-    std::vector<std::shared_ptr<EntityView>> _views = {}; // All entity views
+    std::vector<std::shared_ptr<views::EntityView>> _views = {}; // All entity views
     std::unique_ptr<Camera> _camera;      // Camera class to convert world coordinates to pixel coordinates
     std::unique_ptr<logic::World> _world; // Game logic controller that owns and manages all entities
     std::shared_ptr<logic::Score> _score; // Score class to track the score, forwarded to next PlayingState
