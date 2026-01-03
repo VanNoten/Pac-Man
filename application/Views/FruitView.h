@@ -32,7 +32,7 @@ private:
     // Sprite layout constants
     static constexpr int SPRITE_SIZE = 36; // size in pixels of fruit
     static constexpr int X_OFFSET = 601;   // x offset pixels on spritesheet
-    static constexpr int Y_OFFSET = 3;     // y offset pixels on spritesheet
+    static constexpr int Y_OFFSET = 153;   // y offset pixels on spritesheet
 
     sf::IntRect _spriteRect = {X_OFFSET, Y_OFFSET, SPRITE_SIZE, SPRITE_SIZE};
 

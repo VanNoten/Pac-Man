@@ -23,4 +23,13 @@ void Camera::worldToScreen(const float worldX, const float worldY, float& screen
 
 float Camera::worldToScreenSize(const float worldSize) const { return worldSize * _scale; }
 
+void Camera::resize(const float windowWidth, const float windowHeight) {
+    _windowWidth = windowWidth;
+    _windowHeight = windowHeight;
+
+    _scale = std::min(windowWidth / 2.0f, windowHeight / 2.0f);
+    _offsetX = (windowWidth - 2.0f * _scale) / 2.0f;
+    _offsetY = (windowHeight - 2.0f * _scale) / 2.0f;
+}
+
 } // namespace application

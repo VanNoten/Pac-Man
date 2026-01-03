@@ -98,6 +98,8 @@ void PlayingState::update() {
 void PlayingState::render(sf::RenderWindow& window) {
     if (!_camera) {
         _camera = std::make_unique<Camera>(window.getSize().x, window.getSize().y);
+    } else {
+        _camera->resize(static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y));
     }
 
     // Render all entity views
@@ -105,31 +107,44 @@ void PlayingState::render(sf::RenderWindow& window) {
         view->draw(window, *_camera, _deltaTime);
     }
 
+    float windowWidth = static_cast<float>(window.getSize().x);
+    float windowHeight = static_cast<float>(window.getSize().y);
+
     sf::Font font = ResourceLoader::getInstance().getFont();
+
+    float fontSize = windowHeight * 0.05f;
+    float textYOffset = windowHeight - fontSize - windowHeight * 0.03f;
+
+    float centerX = windowWidth / 2.0f;
+
+    sf::Text levelText;
+    levelText.setFont(font);
+    levelText.setString("Level: " + std::to_string(_currentLevel));
+    levelText.setCharacterSize(static_cast<unsigned int>(fontSize));
+    levelText.setFillColor(sf::Color::Yellow);
+    levelText.setPosition(centerX - levelText.getLocalBounds().width / 2.0f, windowHeight * 0.03f);
+    window.draw(levelText);
 
     sf::Text scoreText;
     scoreText.setFont(font);
     scoreText.setString("Score: " + std::to_string(_score->getCurrentScore()));
-    scoreText.setCharacterSize(24);
-    scoreText.setFillColor(sf::Color::White);
-    scoreText.setPosition(0, 30);
-    window.draw(scoreText);
+    scoreText.setCharacterSize(static_cast<unsigned int>(fontSize));
+    scoreText.setFillColor(sf::Color::Yellow);
 
     sf::Text livesText;
     livesText.setFont(font);
-    livesText.setString("Lives: " + std::to_string(_world->getPacmanLives()));
-    livesText.setCharacterSize(24);
-    livesText.setFillColor(sf::Color::White);
-    livesText.setPosition(0, 60);
-    window.draw(livesText);
+    livesText.setString("# Lives Remaining: " + std::to_string(_world->getPacmanLives()));
+    livesText.setCharacterSize(static_cast<unsigned int>(fontSize));
+    livesText.setFillColor(sf::Color::Yellow);
 
-    sf::Text levelText;
-    levelText.setFont(font);
-    levelText.setString("Level: " + std::to_string(_world->getCurrentLevel()));
-    levelText.setCharacterSize(24);
-    levelText.setFillColor(sf::Color::White);
-    levelText.setPosition(0, 90);
-    window.draw(levelText);
+    float spacing = windowWidth * 0.05f;
+    float combinedWidth = scoreText.getLocalBounds().width + spacing + livesText.getLocalBounds().width;
+    float xOffset = centerX - combinedWidth / 2.0f;
+    scoreText.setPosition(xOffset, textYOffset);
+    livesText.setPosition(xOffset + scoreText.getLocalBounds().width + spacing, textYOffset);
+
+    window.draw(scoreText);
+    window.draw(livesText);
 }
 
 } // namespace application::states

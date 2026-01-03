@@ -35,16 +35,19 @@ void PausedState::update() {}
 void PausedState::render(sf::RenderWindow& window) {
     sf::Font font = ResourceLoader::getInstance().getFont();
 
-    float centerX = window.getSize().x / 2.0f;
-    float centerY = window.getSize().y / 2.0f;
+    float windowWidth = static_cast<float>(window.getSize().x);
+    float windowHeight = static_cast<float>(window.getSize().y);
+
+    float centerX = windowWidth / 2.0f;
+    float centerY = windowHeight / 2.0f;
 
     sf::Text tempText;
     tempText.setFont(font);
     tempText.setString("Resume Game");
-    tempText.setCharacterSize(36);
+    tempText.setCharacterSize(static_cast<unsigned int>(windowHeight * 0.07f));
     float buttonWidth = tempText.getLocalBounds().width * 1.6f;
     float buttonHeight = tempText.getLocalBounds().height * 2.0f;
-    float buttonSpacing = 40.0f;
+    float buttonSpacing = windowHeight * 0.05f;
 
     float totalHeight = (buttonHeight * 2) + buttonSpacing;
     float yPosition = centerY - totalHeight / 2.0f;
@@ -52,7 +55,7 @@ void PausedState::render(sf::RenderWindow& window) {
     sf::Text resumeText;
     resumeText.setFont(font);
     resumeText.setString("Resume Game");
-    resumeText.setCharacterSize(36);
+    resumeText.setCharacterSize(static_cast<unsigned int>(windowHeight * 0.07f));
     resumeText.setFillColor(sf::Color::White);
 
     sf::RectangleShape resumeRect({buttonWidth, buttonHeight});
@@ -75,7 +78,7 @@ void PausedState::render(sf::RenderWindow& window) {
     sf::Text mainMenuText;
     mainMenuText.setFont(font);
     mainMenuText.setString("Main Menu");
-    mainMenuText.setCharacterSize(36);
+    mainMenuText.setCharacterSize(static_cast<unsigned int>(windowHeight * 0.07f));
     mainMenuText.setFillColor(sf::Color::White);
 
     sf::RectangleShape mainMenuRect({buttonWidth, buttonHeight});

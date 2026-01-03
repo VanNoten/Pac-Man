@@ -35,6 +35,13 @@ public:
      */
     [[nodiscard]] float worldToScreenSize(float worldSize) const;
 
+    /**
+     * @brief Updates the camera parameters for the resized window.
+     * @param windowWidth New width of the window in pixels.
+     * @param windowHeight New height of the window in pixels.
+     */
+    void resize(float windowWidth, float windowHeight);
+
 private:
     float _windowWidth = 0;
     float _windowHeight = 0;

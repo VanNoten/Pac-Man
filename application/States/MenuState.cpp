@@ -32,32 +32,35 @@ void MenuState::update() {}
 void MenuState::render(sf::RenderWindow& window) {
     sf::Font font = ResourceLoader::getInstance().getFont();
 
-    float centerX = window.getSize().x / 2.0f;
-    float yPosition = 20.0f;
+    float windowWidth = static_cast<float>(window.getSize().x);
+    float windowHeight = static_cast<float>(window.getSize().y);
+
+    float centerX = windowWidth / 2.0f;
+    float yPosition = windowHeight * 0.05f;
 
     sf::Text titleText;
     titleText.setFont(font);
     titleText.setString("Pac-Man");
-    titleText.setCharacterSize(64);
+    titleText.setCharacterSize(static_cast<unsigned int>(windowHeight * 0.15f));
     titleText.setFillColor(sf::Color::Yellow);
     titleText.setPosition(centerX - titleText.getLocalBounds().width / 2.0f, yPosition);
     window.draw(titleText);
-    yPosition += 140.0f;
+    yPosition += windowHeight * 0.2f;
 
     sf::Text scoresTitle;
     scoresTitle.setFont(font);
     scoresTitle.setString("Previous High Scores");
-    scoresTitle.setCharacterSize(24);
+    scoresTitle.setCharacterSize(static_cast<unsigned int>(windowHeight * 0.07f));
     scoresTitle.setFillColor(sf::Color::White);
     scoresTitle.setPosition(centerX - scoresTitle.getLocalBounds().width / 2.0f, yPosition);
     window.draw(scoresTitle);
-    yPosition += 40.0f;
+    yPosition += windowHeight * 0.1f;
 
     if (_highScores.empty()) {
         sf::Text noScoresText;
         noScoresText.setFont(font);
         noScoresText.setString("No scores yet");
-        noScoresText.setCharacterSize(18);
+        noScoresText.setCharacterSize(static_cast<unsigned int>(windowHeight * 0.04f));
         noScoresText.setFillColor(sf::Color::White);
         noScoresText.setPosition(centerX - noScoresText.getLocalBounds().width / 2.0f, yPosition);
         window.draw(noScoresText);
@@ -66,20 +69,20 @@ void MenuState::render(sf::RenderWindow& window) {
             sf::Text scoreText;
             scoreText.setFont(font);
             scoreText.setString(std::to_string(i + 1) + ". " + std::to_string(_highScores[i]));
-            scoreText.setCharacterSize(18);
+            scoreText.setCharacterSize(static_cast<unsigned int>(windowHeight * 0.04f));
             scoreText.setFillColor(sf::Color::White);
             scoreText.setPosition(centerX - scoreText.getLocalBounds().width / 2.0f, yPosition);
             window.draw(scoreText);
 
-            yPosition += 35.0f;
+            yPosition += windowHeight * 0.07f;
         }
     }
 
-    yPosition += 60.0f;
+    yPosition += windowHeight * 0.1f;
     sf::Text playText;
     playText.setFont(font);
     playText.setString("Play");
-    playText.setCharacterSize(36);
+    playText.setCharacterSize(static_cast<unsigned int>(windowHeight * 0.07f));
     playText.setFillColor(sf::Color::White);
 
     sf::RectangleShape playRect({playText.getLocalBounds().width * 1.6f, playText.getLocalBounds().height * 2.0f});
