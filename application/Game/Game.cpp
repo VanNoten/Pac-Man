@@ -15,14 +15,13 @@ void Game::run() {
         while (_window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 _window.close();
-            } else if (event.type == sf::Event::Resized) {
+            }
+            if (event.type == sf::Event::Resized) {
                 sf::FloatRect visibleArea(0.f, 0.f, static_cast<float>(event.size.width),
                                           static_cast<float>(event.size.height));
                 _window.setView(sf::View(visibleArea));
-                _stateManager.handleEvent(event);
-            } else {
-                _stateManager.handleEvent(event);
             }
+            _stateManager.handleEvent(event);
         }
 
         _window.clear(sf::Color::Black);
