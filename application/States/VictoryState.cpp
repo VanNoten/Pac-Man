@@ -24,10 +24,12 @@ void VictoryState::handleEvent(const sf::Event& event) {
             _stateManager.changeState(std::make_unique<PlayingState>(
                 _stateManager, _score, _livesLeft,
                 _currentLevel + 1)); // Transition to new PlayingState with incremented level
+            return;
         }
 
         if (_mainMenuButtonBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
             _stateManager.changeState(std::make_unique<MenuState>(_stateManager)); // Return to main menu
+            return;
         }
     }
 }

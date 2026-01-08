@@ -20,10 +20,12 @@ void GameOverState::handleEvent(const sf::Event& event) {
 
         if (_restartButtonBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
             _stateManager.changeState(std::make_unique<PlayingState>(_stateManager)); // Restart game
+            return;
         }
 
         if (_mainMenuButtonBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
             _stateManager.changeState(std::make_unique<MenuState>(_stateManager)); // Return to main menu
+            return;
         }
     }
 }

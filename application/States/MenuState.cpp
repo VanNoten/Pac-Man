@@ -16,6 +16,7 @@ MenuState::MenuState(StateManager& stateManager)
 void MenuState::handleEvent(const sf::Event& event) {
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
         _stateManager.changeState(std::make_unique<PlayingState>(_stateManager));
+        return;
     }
 
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
@@ -23,6 +24,7 @@ void MenuState::handleEvent(const sf::Event& event) {
         sf::Vector2i mousePos = {event.mouseButton.x, event.mouseButton.y};
         if (_playButtonBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
             _stateManager.changeState(std::make_unique<PlayingState>(_stateManager));
+            return;
         }
     }
 }
