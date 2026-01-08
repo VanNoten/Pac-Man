@@ -266,9 +266,11 @@ private:
      */
     [[nodiscard]] util::Direction getNextFearedGhostDirection(const entities::Ghost& ghost) const;
 
-    std::vector<std::string> _map = {};  // Vector of strings representing map layout
-    float _originX, _originY, _cell = 0; // Coordinate system variables
-    AbstractFactory& _factory;           // Factory for creating entities
+    std::vector<std::string> _map = {}; // Vector of strings representing map layout
+    float _originX = 0;                 // Coordinate system variables
+    float _originY = 0;
+    float _cell = 0;
+    AbstractFactory& _factory; // Factory for creating entities
 
     std::vector<std::unique_ptr<entities::Wall>> _walls;   // All wall entities
     std::vector<std::unique_ptr<entities::Coin>> _coins;   // All coin entities

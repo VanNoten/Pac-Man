@@ -11,10 +11,10 @@ namespace logic::util {
 enum class Direction { UP, DOWN, LEFT, RIGHT };
 
 struct Bounds {
-    float left;
-    float right;
-    float top;
-    float bottom;
+    float left = 0;
+    float right = 0;
+    float top = 0;
+    float bottom = 0;
 };
 
 } // namespace logic::util
